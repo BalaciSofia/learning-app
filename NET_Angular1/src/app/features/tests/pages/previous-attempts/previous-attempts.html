@@ -1,0 +1,63 @@
+<section class="previous-attempts-shell">
+    @if (isLoading()) {
+        <app-loading-spinner
+            [isLoading]="true"
+            message="Loading attempts...">
+        </app-loading-spinner>
+    } @else {
+        <article class="surface-card previous-attempts-card">
+            <header class="previous-attempts-header">
+                <div>
+                    <p class="eyebrow">Attempt history</p>
+                    <h1>Previous Attempts</h1>
+                </div>
+
+                <button
+                    class="secondary-button"
+                    type="button"
+                    (click)="goBackToTests()"
+                >
+                    Back to tests
+                </button>
+            </header>
+
+            @if (submittedAttempts().length > 0) {
+                <div class="attempts-list">
+                    @for (attempt of submittedAttempts(); track attempt.attemptId; let index = $index) {
+                        <section class="attempt-card">
+                            <div>
+                                <h2>Attempt #{{ index + 1 }}</h2>
+
+                                <p class="attempt-date">
+                                    Completed: {{ attempt.submittedAt | date: 'medium' }}
+                                </p>
+                            </div>
+
+                            <div class="attempt-score">
+                                <span>Score</span>
+                                <strong>{{ attempt.score }} / {{ attempt.maxScore }}</strong>
+                            </div>
+
+                            <div class="attempt-score">
+                                <span>Percentage</span>
+                                <strong>{{ getPercentage(attempt) }}%</strong>
+                            </div>
+
+                            <button
+                                class="primary-button"
+                                type="button"
+                                (click)="viewResult(attempt.attemptId)"
+                            >
+                                View result
+                            </button>
+                        </section>
+                    }
+                </div>
+            } @else {
+                <p class="empty-state">
+                    No completed attempts available for this test.
+                </p>
+            }
+        </article>
+    }
+</section>

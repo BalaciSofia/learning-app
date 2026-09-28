@@ -1,0 +1,116 @@
+<section class="question-builder-shell">
+    <form class="surface-card question-builder-form" [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+        <header class="form-header">
+            <h1 class="title">Add a question</h1>
+            <p class="subtitle">Write the question, then add its answer options.</p>
+        </header>
+
+        <div class="form-fields">
+            <div class="form-item">
+                <label class="field-label" for="text">Question text</label>
+                <textarea class="text-field text-area" id="text" rows="3" formControlName="text"></textarea>
+                @if (questionForm.controls.text.invalid && questionForm.controls.text.touched) {
+                    <p class="field-error">Question text is required.</p>
+                }
+            </div>
+
+            <div class="form-item">
+                <label class="field-label">Question type</label>
+                <label class="checkbox-label">
+                    <input type="radio" formControlName="type" [value]="QuestionType.Single" />
+                    Single choice
+                </label>
+                <label class="checkbox-label">
+                    <input type="radio" formControlName="type" [value]="QuestionType.Multiple" />
+                    Multiple choice
+                </label>
+                @if (questionForm.controls.type.invalid && questionForm.controls.type.touched) {
+                    <p class="field-error">Question type is required.</p>
+                }
+            </div>
+
+            <div class="form-item">
+                <label class="field-label">How do you want to build the answers?</label>
+                <div class="mode-toggle">
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        [class.active]="answerMode() === 'manual'"
+                        [attr.aria-pressed]="answerMode() === 'manual'"
+                        (click)="setAnswerMode('manual')"
+                    >
+                        Manual
+                    </button>
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        [class.active]="answerMode() === 'ai'"
+                        [attr.aria-pressed]="answerMode() === 'ai'"
+                        (click)="setAnswerMode('ai')"
+                    >
+                        AI Generated
+                    </button>
+                </div>
+            </div>
+
+            @if (answerMode() === 'ai') {
+                <div class="form-item ai-generate-section">
+                    <label class="field-label" for="correct-answer">Correct answer</label>
+                    <input class="text-field" id="correct-answer" type="text" [formControl]="correctAnswerControl" />
+                    @if (correctAnswerControl.invalid && correctAnswerControl.touched) {
+                        <p class="field-error">Correct answer is required to generate distractors.</p>
+                    }
+                    <button class="primary-button" type="button" (click)="generateDistractors()" [disabled]="isGenerating()">
+                        {{ isGenerating() ? 'Generating...' : 'Generate with AI' }}
+                    </button>
+                </div>
+            }
+
+            <div class="answers-section" formArrayName="answers">
+                <label class="field-label">Answers</label>
+
+                @for (answer of answers.controls; track $index) {
+                    <div class="answer-row" [formGroupName]="$index">
+                        <input class="text-field" type="text" formControlName="text" placeholder="Answer text" />
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="isCorrect" />
+                            Correct
+                        </label>
+                        <button class="secondary-button" type="button" (click)="removeAnswer($index)" [disabled]="answers.length <= 2">
+                            Remove
+                        </button>
+                    </div>
+                    @if (answer.controls.text.invalid && answer.controls.text.touched) {
+                        <p class="field-error">Answer text is required.</p>
+                    }
+                }
+
+                @if (answerMode() === 'ai' && answers.length === 0) {
+                    <p class="field-label">Generate answers with AI to continue.</p>
+                }
+
+                <button class="secondary-button" type="button" (click)="addAnswer()" [disabled]="answers.length >= maxAnswers">
+                    Add answer
+                </button>
+                @if (answers.length >= maxAnswers) {
+                    <p class="field-label">Maximum of {{ maxAnswers }} answers reached.</p>
+                }
+
+                @if (questionForm.hasError('singleChoiceRequiresOneCorrectAnswer') && questionForm.touched) {
+                    <p class="field-error">A single-choice question must have exactly one correct answer.</p>
+                }
+                @if (questionForm.hasError('multipleChoiceRequiresAtLeastOneCorrectAnswer') && questionForm.touched) {
+                    <p class="field-error">A multiple-choice question must have at least one correct answer.</p>
+                }
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="secondary-button" type="button" (click)="onFinish()">Finish adding questions</button>
+            <button class="secondary-button" type="button" (click)="onCancel()">Cancel</button>
+            <button class="primary-button" type="submit" [disabled]="questionForm.invalid || isSubmitting()">
+                {{ isSubmitting() ? 'Saving...' : 'Save question' }}
+            </button>
+        </div>
+    </form>
+</section>

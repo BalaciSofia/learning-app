@@ -1,0 +1,38 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.lesson-page {
+  width: 100%;
+  max-width: 60rem;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+
+  @include below-md {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: hsl(var(--primary));
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+app-lesson-form {
+  display: block;
+}

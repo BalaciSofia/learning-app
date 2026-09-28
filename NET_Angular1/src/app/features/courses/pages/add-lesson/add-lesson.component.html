@@ -1,0 +1,31 @@
+<div class="lesson-page">
+
+  <button class="back-btn" (click)="goBack()">
+    &larr; Back to Unit
+  </button>
+
+  @if (errorMessage()) {
+    <div class="error-state">
+      <span class="icon">⚠️</span>
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (unitId()) {
+
+    <app-lesson-form
+      [form]="lessonForm"
+      [lessonTypes]="lessonTypes"
+      [tests]="tests()"
+      [isSaving]="isSaving()"
+      title="Add New Lesson"
+      description="Configure the details and content of the new lesson."
+      submitText="Save Lesson"
+      savingText="Saving..."
+      (cancel)="goBack()"
+      (submitForm)="onSubmit()">
+    </app-lesson-form>
+
+  }
+
+</div>

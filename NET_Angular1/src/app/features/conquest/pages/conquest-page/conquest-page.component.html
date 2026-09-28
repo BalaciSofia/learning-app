@@ -1,0 +1,66 @@
+<div class="conquest-page-container">
+
+  @if (error()) {
+    <div class="error-banner">
+      <p>{{ error() }}</p>
+      <button (click)="store.loadProgress(courseId)">Try again</button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="skeleton-container">
+      <p>Loading map...</p>
+    </div>
+  } @else if (progress(); as progressData) {
+    <header class="page-header">
+      <h2>Conquest Map</h2>
+      <div class="xp-badge">Total XP: <strong>{{ progressData.totalXp }}</strong></div>
+    </header>
+
+    <div class="conquest-layout-grid">
+      
+      <main class="map-section">
+        <app-conquest-map 
+          [zones]="zones()" 
+          [treasures]="treasures()"
+          (zoneSelected)="handleZoneSelection($event)"
+          (treasureSelected)="handleTreasureSelection($event)">
+        </app-conquest-map>
+      </main>
+
+      <aside class="quests-sidebar">
+        <h3>📜 Quests </h3>
+        <div class="quests-list">
+          @for (quest of quests(); track quest.id) {
+            <div class="quest-card" 
+                 [class.completed]="quest.status === ItemStatus.Completed" 
+                 (click)="handleQuestClick(quest)">
+              <div class="quest-icon">{{ quest.icon }}</div>
+              <div class="quest-info">
+                <span class="quest-title">{{ quest.name }}</span>
+                <span class="quest-xp">+{{ quest.xpReward }} XP</span>
+              </div>
+              @if (quest.status === ItemStatus.Completed) {
+                <span class="badge-check">✅</span>
+              }
+            </div>
+          } @empty {
+            <p class="no-quests">No available quests.</p>
+          }
+        </div>
+      </aside>
+
+    </div>
+  }
+
+  @if (selectedZoneForConquest() || selectedQuestForAnswer()) {
+    @let activeItem = selectedZoneForConquest() || selectedQuestForAnswer();
+    <app-quiz-dialog 
+      [question]="activeItem!.question!" 
+      [isSubmitting]="isSubmittingAnswer()"
+      (submitAnswer)="handleAnswerSubmitted($event)" 
+      (cancel)="closeDialog()">
+    </app-quiz-dialog>
+  }
+
+</div>

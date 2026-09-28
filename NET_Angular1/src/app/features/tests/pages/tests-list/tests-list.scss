@@ -1,0 +1,47 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.tests-shell {
+  display: grid;
+  gap: 1.5rem;
+  width: min(100%, 72rem);
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  @include below-sm {
+    padding: 1.25rem 1rem;
+  }
+}
+
+.tests-header {
+  display: flex;
+  justify-content: flex-end;
+
+  @include below-sm {
+    .primary-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+.tests-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+
+  @include below-sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}
+

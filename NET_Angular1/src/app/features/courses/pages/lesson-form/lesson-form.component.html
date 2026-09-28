@@ -1,0 +1,175 @@
+<header class="form-header">
+  <div class="header-title-group">
+    <h1>{{ title }}</h1>
+    <p class="description">
+      {{ description }}
+    </p>
+  </div>
+</header>
+
+<form
+  class="modern-form"
+  [formGroup]="form"
+  (ngSubmit)="submitForm.emit()">
+
+  <section class="form-card">
+
+    <div class="unit-header">
+      <h3 class="unit-title">
+        General Information
+      </h3>
+    </div>
+
+    <div class="form-card-body">
+
+      <div class="form-group">
+        <label>
+          Lesson Title
+          <span class="required">*</span>
+        </label>
+
+        <input
+          type="text"
+          formControlName="title"
+          placeholder="e.g. Introduction to Components" />
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>
+            Description
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="text"
+            formControlName="description"
+            placeholder="e.g. Some wonderful lesson" />
+        </div>
+
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>
+            Duration (minutes)
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="number"
+            formControlName="duration" />
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Lesson Type
+            <span class="required">*</span>
+          </label>
+
+          <select formControlName="type">
+
+            @for (type of lessonTypes; track type) {
+              <option [value]="type">
+                {{ type }}
+              </option>
+            }
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section
+    class="form-card"
+    formGroupName="content">
+
+    <div class="unit-header">
+      <h3 class="unit-title">
+        Content Details
+      </h3>
+    </div>
+
+    <div class="form-card-body">
+
+      <div class="form-group">
+
+        <label>Video URL</label>
+
+        <input
+          type="url"
+          formControlName="videoUrl"
+          placeholder="https://..." />
+
+        <span class="hint">
+          Applicable if the lesson is a video format.
+        </span>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Body Text</label>
+
+        <textarea
+          rows="5"
+          formControlName="bodyText"
+          placeholder="Enter the text content here...">
+        </textarea>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Quiz</label>
+
+        <select formControlName="quizId">
+          <option [ngValue]="null">-- Select a quiz --</option>
+          @for (test of tests; track test.id) {
+            <option [ngValue]="test.id">
+              {{ test.title }}
+            </option>
+          }
+        </select>
+
+        <span class="hint">
+          Link an existing quiz to this lesson.
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="cancel.emit()">
+
+        Cancel
+
+      </button>
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="isSaving">
+
+        {{ isSaving ? savingText : submitText }}
+
+      </button>
+
+    </div>
+
+  </section>
+
+</form>

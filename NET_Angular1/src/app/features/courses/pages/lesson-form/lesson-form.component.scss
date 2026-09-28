@@ -1,0 +1,195 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+
+  .header-title-group {
+    h1 {
+      margin: 0 0 0.4rem;
+      color: hsl(var(--foreground));
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .description {
+      max-width: 650px;
+      margin: 0;
+      color: hsl(var(--muted-foreground));
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  }
+}
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-card {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  background: hsl(var(--card));
+  box-shadow: 0 4px 12px rgb(0 0 0 / 4%);
+}
+
+.unit-header {
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+
+  @include below-md {
+    padding: 1.25rem 1.5rem 0.9rem;
+  }
+
+  .unit-title {
+    margin: 0;
+    color: hsl(var(--foreground));
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+}
+
+.form-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+
+  @include below-md {
+    padding: 1.5rem;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+
+  @include below-md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+
+  label {
+    color: hsl(var(--foreground));
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    .required {
+      color: hsl(var(--destructive));
+    }
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem 1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    font: inherit;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &::placeholder {
+      color: hsl(var(--muted-foreground));
+    }
+
+    &:focus {
+      outline: none;
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 3px hsl(var(--primary) / 15%);
+    }
+
+    &:disabled {
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      cursor: not-allowed;
+    }
+  }
+
+  textarea {
+    min-height: 150px;
+    resize: vertical;
+  }
+
+  .hint {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid hsl(var(--border));
+
+  @include below-md {
+    flex-direction: column-reverse;
+
+    .cancel-btn,
+    .save-btn {
+      width: 100%;
+    }
+  }
+
+  .cancel-btn,
+  .save-btn {
+    min-width: 150px;
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .cancel-btn {
+    border: 1px solid hsl(var(--border));
+    background: transparent;
+    color: hsl(var(--muted-foreground));
+
+    &:hover {
+      background: hsl(var(--muted));
+      color: hsl(var(--foreground));
+    }
+  }
+
+  .save-btn {
+    border: none;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+
+    &:hover:not(:disabled) {
+      background: hsl(var(--primary) / 90%);
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,0 +1,85 @@
+# build-api.yml
+# ───────────────────────────────────────────────────────────────
+# Build-only pipeline
+# Trigger: automatic on develop branch
+# Deploy will be handled via Classic Releases 
+# ───────────────────────────────────────────────────────────────
+
+trigger:
+  branches:
+    include:
+      - main
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+
+  - name: buildConfiguration
+    value: 'Release'
+  - name: artifactDir
+    value: '$(Build.ArtifactStagingDirectory)'
+  - name: sqlServer
+    value: practica2026sqlsrv.database.windows.net
+  - name: sqlConnection
+    value: 'Server=tcp:practica2026sqlsrv.database.windows.net,1433;Database=practica2026DB1;Persist Security Info=False;User Id=admpractica2026;Password=REMOVED;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+
+steps:
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '10.0.x'
+
+# ───────────────────────────────────────────────────────────────
+# Restore sln
+# ───────────────────────────────────────────────────────────────
+- task: NuGetToolInstaller@1
+
+# ───────────────────────────────────────────────────────────────
+#  Build Solution 
+# ───────────────────────────────────────────────────────────────
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build .NET project'
+  inputs:
+    command: 'build'
+    projects: '**/*.slnx'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish API'
+  inputs:
+    command: 'publish'
+    projects: '**/*API.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(artifactDir)/deploy'
+    zipAfterPublish: true
+
+# ───────────────────────────────────────────────────────────────
+#   Publish the deploy folder as artefact
+# ───────────────────────────────────────────────────────────────
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish folder artefact'
+  inputs:
+    PathtoPublish: '$(artifactDir)/deploy/API.zip'
+    ArtifactName:  'LearningAPI'
+    publishLocation: Container
+
+# ───────────────────────────────────────────────────────────────
+# Run tests
+# ───────────────────────────────────────────────────────────────
+
+- script: |
+    dotnet test Tests/Tests.csproj \
+      --configuration Release \
+      --no-build \
+      --logger "trx;LogFileName=$(Build.ArtifactStagingDirectory)/test_results.trx" \
+      --results-directory $(Build.ArtifactStagingDirectory)
+  displayName: 'Run NUnit tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '$(Build.ArtifactStagingDirectory)/test_results.trx'
+    testRunTitle: 'NUnit Tests'
+    failTaskOnFailedTests: false
+

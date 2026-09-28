@@ -1,0 +1,244 @@
+<section class="test-detail-shell">
+    <div class="surface-card test-detail-card">
+        <a class="back-link" [routerLink]="testsListRoute">&larr; Back to tests</a>
+
+        @if (isLoading()) {
+            <p class="field-label">Loading test...</p>
+        } @else if (test(); as loadedTest) {
+            <header class="form-header">
+                @if (editingTestDetails()) {
+                    <form [formGroup]="testDetailsForm" (ngSubmit)="saveTestDetails()" class="form-fields">
+                        <div class="form-item">
+                            <label class="field-label" for="test-title">Title</label>
+                            <input class="text-field" id="test-title" type="text" formControlName="title" />
+                            @if (testDetailsForm.controls.title.hasError('required') && testDetailsForm.controls.title.touched) {
+                                <p class="field-error">Title is required.</p>
+                            }
+                            @if (testDetailsForm.controls.title.hasError('maxlength')) {
+                                <p class="field-error">Title cannot exceed 200 characters.</p>
+                            }
+                        </div>
+
+                        <div class="form-item">
+                            <label class="field-label" for="test-description">Description (optional)</label>
+                            <textarea class="text-field text-area" id="test-description" rows="3" formControlName="description"></textarea>
+                            @if (testDetailsForm.controls.description.hasError('maxlength')) {
+                                <p class="field-error">Description cannot exceed 2000 characters.</p>
+                            }
+                        </div>
+
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="isRetakeAllowed" />
+                            Allow retakes
+                        </label>
+
+                        <div class="form-actions">
+                            <button class="secondary-button" type="button" (click)="cancelEditTestDetails()">Cancel</button>
+                            <button class="primary-button" type="submit" [disabled]="testDetailsForm.invalid || isSavingTestDetails()">
+                                {{ isSavingTestDetails() ? 'Saving...' : 'Save' }}
+                            </button>
+                        </div>
+                    </form>
+                } @else {
+                    <div class="test-details-header">
+                        <div>
+                            <div class="title-row">
+                                <h1 class="title">{{ loadedTest.title }}</h1>
+
+                                <span
+                                    class="meta-pill"
+                                    [class.published-badge]="loadedTest.isPublished"
+                                    [class.draft-badge]="!loadedTest.isPublished"
+                                >
+                                    {{ loadedTest.isPublished ? 'Published' : 'Draft' }}
+                                </span>
+                            </div>
+
+                            @if (loadedTest.description) {
+                                <p class="subtitle">{{ loadedTest.description }}</p>
+                            }
+                        </div>
+                        @if (!loadedTest.isPublished) {
+                            <button class="icon-button" type="button" (click)="startEditTestDetails()" aria-label="Edit test details">
+                                <span class="material-symbols-rounded">edit</span>
+                            </button>
+                        }
+                    </div>
+                }
+            </header>
+
+            <div class="questions-list">
+                @for (question of loadedTest.questions; track question.id; let questionIndex = $index) {
+                    <div class="question-card">
+                        @if (!loadedTest.isPublished && editingQuestionId() === question.id) {
+                            <form [formGroup]="questionEditForm" (ngSubmit)="saveQuestion(question.id)" class="form-fields">
+                                <div class="form-item">
+                                    <label class="field-label" for="edit-text-{{ question.id }}">Question text</label>
+                                    <textarea class="text-field text-area" id="edit-text-{{ question.id }}" rows="2" formControlName="text"></textarea>
+                                    @if (questionEditForm.controls.text.invalid && questionEditForm.controls.text.touched) {
+                                        <p class="field-error">Question text is required.</p>
+                                    }
+                                </div>
+
+                                <div class="form-item">
+                                    <label class="field-label">Question type</label>
+                                    <label class="checkbox-label">
+                                        <input type="radio" formControlName="type" [value]="QuestionType.Single" />
+                                        Single choice
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="radio" formControlName="type" [value]="QuestionType.Multiple" />
+                                        Multiple choice
+                                    </label>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button class="secondary-button" type="button" (click)="cancelEditQuestion()">Cancel</button>
+                                    <button class="primary-button" type="submit" [disabled]="questionEditForm.invalid || isSavingQuestion()">
+                                        {{ isSavingQuestion() ? 'Saving...' : 'Save' }}
+                                    </button>
+                                </div>
+                            </form>
+                        } @else {
+                            <div class="question-header">
+                                <p class="question-text">
+                                    {{ questionIndex + 1 }}. {{ question.text }}
+                                    <span class="meta-pill">{{ question.type }}</span>
+                                </p>
+                                
+                                @if (!loadedTest.isPublished) {
+                                    <div class="question-actions">
+                                        <button class="icon-button" type="button" (click)="startEditQuestion(question)" aria-label="Edit question">
+                                            <span class="material-symbols-rounded">edit</span>
+                                        </button>
+
+                                        <button class="icon-button icon-button-danger" type="button" (click)="requestDeleteQuestion(question)" aria-label="Delete question">
+                                            <span class="material-symbols-rounded">delete</span>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+            <div class="answers-list">
+                @for (answer of question.answers; track answer.id; let answerIndex = $index) {
+                    @if (!loadedTest.isPublished && editingAnswerId() === answer.id) {
+                        <form [formGroup]="answerEditForm" (ngSubmit)="saveAnswer(question.id, answer.id)" class="answer-row">
+                            <span class="answer-letter">{{ answerLetter(answerIndex) }}</span>
+                            <input class="text-field" type="text" formControlName="text" />
+                            <label class="checkbox-label">
+                                <input type="checkbox" formControlName="isCorrect" />
+                                Correct
+                            </label>
+                            <button class="secondary-button" type="button" (click)="cancelEditAnswer()">Cancel</button>
+                            <button class="primary-button" type="submit" [disabled]="answerEditForm.invalid || isSavingAnswer()">
+                                {{ isSavingAnswer() ? 'Saving...' : 'Save' }}
+                            </button>
+                        </form>
+                    } @else {
+                        <div class="answer-row">
+                            <span class="answer-letter">{{ answerLetter(answerIndex) }}</span>
+                            <span class="answer-text">{{ answer.text }}</span>
+                            @if (answer.isCorrect) {
+                                <span class="meta-pill correct-badge">Correct</span>
+                            }
+                            @if (!loadedTest.isPublished && editingQuestionId() === question.id) {
+                                <button class="icon-button" type="button" (click)="startEditAnswer(answer)" aria-label="Edit answer">
+                                    <span class="material-symbols-rounded">edit</span>
+                                </button>
+                                <button class="icon-button icon-button-danger" type="button" (click)="requestDeleteAnswer(question.id, answer)" aria-label="Delete answer">
+                                    <span class="material-symbols-rounded">delete</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+            <div class="detail-actions">
+                <button
+                    class="destructive-button"
+                    type="button"
+                    (click)="requestDeleteTest()"
+                >
+                    Delete test
+                </button>
+
+                <div class="management-actions">
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        (click)="viewAttempts()"
+                    >
+                        Previous attempts
+                    </button>
+
+                    <a
+                        *appHasRole="UserRole.Teacher"
+                        class="secondary-button"
+                        [routerLink]="statisticsRoute"
+                    >
+                        View statistics
+                    </a>
+
+                    @if (!loadedTest.isPublished) {
+                        <button
+                            class="primary-button"
+                            type="button"
+                            [disabled]="isPublishing()"
+                            (click)="publishTest()"
+                        >
+                            {{ isPublishing() ? 'Publishing...' : 'Publish test' }}
+                        </button>
+
+                        <a
+                            class="primary-button"
+                            [routerLink]="addQuestionRoute"
+                        >
+                            Add question
+                        </a>
+                    }
+                </div>
+            </div>
+        } @else {
+            <p class="field-error">Could not load this test.</p>
+        }
+    </div>
+
+    @if (showDeleteConfirm()) {
+        <app-confirm-dialog
+            title="Delete test?"
+            [message]="deleteConfirmMessage()"
+            confirmLabel="Delete"
+            [isConfirming]="isDeletingTest()"
+            (confirmed)="confirmDeleteTest()"
+            (cancelled)="cancelDeleteTest()"
+        />
+    }
+
+    @if (questionToDelete()) {
+        <app-confirm-dialog
+            title="Delete question?"
+            [message]="deleteQuestionConfirmMessage()"
+            confirmLabel="Delete"
+            [isConfirming]="isDeletingQuestion()"
+            (confirmed)="confirmDeleteQuestion()"
+            (cancelled)="cancelDeleteQuestion()"
+        />
+    }
+
+    @if (answerToDelete()) {
+        <app-confirm-dialog
+            title="Delete answer?"
+            [message]="deleteAnswerConfirmMessage()"
+            confirmLabel="Delete"
+            [isConfirming]="isDeletingAnswer()"
+            (confirmed)="confirmDeleteAnswer()"
+            (cancelled)="cancelDeleteAnswer()"
+        />
+    }
+</section>

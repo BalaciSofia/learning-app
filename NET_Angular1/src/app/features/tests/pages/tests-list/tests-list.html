@@ -1,0 +1,18 @@
+<section class="tests-shell">
+  <div *appHasRole="[UserRole.Teacher, UserRole.Admin]" class="tests-header">
+    <a class="primary-button" [routerLink]="createTestRoute">Add test</a>
+  </div>
+
+  @if (isLoading()) {
+    <app-loading-spinner />
+  } @else {
+    <div class="tests-grid">
+      @for (test of tests(); track test.id) {
+        <app-teacher-test-summary-card *appHasRole="[UserRole.Teacher, UserRole.Admin]" [test]="test" />
+        <app-test-summary-card *appHasRole="UserRole.Student" [test]="test" (takeTest)="onTakeTest($event)" (viewAttempts)="onViewAttempts($event)" />
+      } @empty {
+        <p class="empty-state">No tests available yet.</p>
+      }
+    </div>
+  }
+</section>

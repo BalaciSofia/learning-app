@@ -1,0 +1,17 @@
+<div
+    *ngIf="isLoading"
+    class="loading-spinner"
+    role="status"
+    aria-live="polite"
+>
+    <mat-spinner
+        class="material-spinner"
+        [diameter]="diameter"
+        [strokeWidth]="4"
+        aria-label="Loading">
+    </mat-spinner>
+
+    <p *ngIf="message" class="loading-message">
+        {{ message }}
+    </p>
+</div>

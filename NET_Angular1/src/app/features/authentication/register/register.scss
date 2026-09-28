@@ -1,0 +1,152 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.register-shell {
+  display: grid;
+  min-height: calc(100dvh - 4.6rem);
+  place-items: center;
+  padding: 2rem 1rem;
+
+  @include below-sm {
+    align-items: start;
+    padding-top: 1.25rem;
+  }
+}
+
+.register-form {
+  display: grid;
+  gap: 1.35rem;
+  width: min(100%, 34rem);
+  padding: 1.75rem;
+
+  @include below-sm {
+    padding: 1.25rem;
+  }
+}
+
+.form-header {
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.title {
+  color: hsl(var(--foreground));
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.subtitle {
+  margin-top: 0.35rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+.form-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include below-sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-item {
+  min-width: 0;
+}
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field .text-field {
+  padding-right: 2.75rem;
+}
+
+.toggle-visibility {
+  position: absolute;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+}
+
+.toggle-visibility:hover {
+  background: hsl(var(--muted));
+}
+
+.toggle-visibility .material-symbols-rounded {
+  font-size: 1.25rem;
+}
+
+.error-area:empty {
+  display: none;
+}
+
+.error-area {
+  border-radius: calc(var(--radius) - 0.2rem);
+  color: hsl(var(--muted-foreground));
+  font-size: 0.88rem;
+}
+
+.submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2.85rem;
+  border: 0;
+  border-radius: calc(var(--radius) - 0.1rem);
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
+  box-shadow: 0 18px 30px -22px hsl(var(--primary) / 0.9);
+  cursor: pointer;
+  font-weight: 700;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submit-button:hover {
+  background: hsl(87 44% 66%);
+  box-shadow: 0 20px 34px -22px hsl(var(--primary) / 0.95);
+  transform: translateY(-1px);
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid hsl(var(--ring) / 0.45);
+  outline-offset: 3px;
+}
+
+.auth-link {
+  color: hsl(var(--primary));
+  text-decoration: none;
+  font-size: 0.88rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.login-prompt {
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.88rem;
+  margin: 0;
+}

@@ -1,0 +1,558 @@
+<div class="course-detail-container">
+
+  <a
+    class="back-btn"
+    [routerLink]="coursesRoute"
+  >
+    &larr; Back to Courses
+  </a>
+
+  @if (isLoading()) {
+
+    <div class="loading-state">
+      Loading course details...
+    </div>
+
+  } @else if (errorMessage()) {
+
+    <div class="error-state">
+      {{ errorMessage() }}
+    </div>
+
+  } @else if (course(); as currentCourse) {
+
+    <header class="course-header">
+      <div class="header-title-row">
+        <h1>{{ currentCourse.title }}</h1>
+        <ng-container *appHasRole="UserRole.Teacher">
+          <span
+            class="badge"
+            [class.draft-badge]="!currentCourse.isPublished"
+            [class.published-badge]="currentCourse.isPublished"
+          >
+            {{ currentCourse.isPublished ? 'Published' : 'Draft' }}
+          </span>
+        </ng-container>
+      </div>
+
+      <span class="subject-badge">
+        {{ currentCourse.subject }}
+      </span>
+
+      <p class="description">
+        {{ currentCourse.description }}
+      </p>
+
+      <ng-container *appHasRole="UserRole.Teacher">
+        @if (isCreator()) {
+          <div class="course-creator-actions">
+            @if (!currentCourse.isPublished) {
+              <button
+                type="button"
+                class="primary-button"
+                [disabled]="isPublishing()"
+                (click)="publishCourse()"
+              >
+                {{ isPublishing() ? 'Publishing...' : 'Publish Course' }}
+              </button>
+            }
+            <button
+              type="button"
+              class="destructive-button"
+              (click)="openDeleteCourseDialog()"
+            >
+              Delete Course
+            </button>
+          </div>
+        }
+      </ng-container>
+
+      @if (isStudent() && !isLoadingProgress()) {
+        @if (!isEnrolled()) {
+          <div class="enrollment-banner">
+            <p>You are not enrolled in this course yet.</p>
+            <button
+              type="button"
+              class="primary-button"
+              [disabled]="isEnrolling()"
+              (click)="enrollInCourse()"
+            >
+              {{ isEnrolling() ? 'Enrolling...' : 'Enroll Now' }}
+            </button>
+          </div>
+        } @else {
+          <div class="progress-section">
+            <div class="progress-header">
+              <span class="progress-title">Your Progress</span>
+              <span class="progress-count">
+                {{ completedLessonsCount() }} of {{ totalLessonsCount() }} lessons completed ({{ progressPercentage() }}%)
+              </span>
+            </div>
+            <div class="progress-bar-track">
+              <div
+                class="progress-bar-fill"
+                [style.width.%]="progressPercentage()"
+              ></div>
+            </div>
+          </div>
+        }
+      }
+    </header>
+
+    <section class="course-units-section">
+
+      <div class="units-section-header">
+        <h2>Course Units</h2>
+
+        <ng-container *appHasRole="UserRole.Teacher">
+          @if (isCreator() && !currentCourse.isPublished) {
+            <button
+              type="button"
+              class="primary-button"
+              (click)="addUnit()"
+            >
+              + Add Unit
+            </button>
+          }
+        </ng-container>
+      </div>
+
+      <ul class="units-list">
+
+        @for (unit of currentCourse.units; track unit.id) {
+
+          <li
+            class="unit-item"
+            [class.is-expanded]="selectedUnitId() === unit.id"
+          >
+
+            <ng-container *appHasRole="UserRole.Teacher">
+              @if (isCreator() && !currentCourse.isPublished && editingUnitId() === unit.id) {
+
+                <div
+                  class="unit-edit-form"
+                  [formGroup]="unitForm"
+                >
+                  <input
+                    type="text"
+                    class="edit-input"
+                    formControlName="title"
+                    placeholder="Unit title"
+                  />
+
+                  @if (
+                    unitForm.controls.title.invalid &&
+                    unitForm.controls.title.touched
+                  ) {
+                    <span class="validation-error">
+                      Title is required
+                    </span>
+                  }
+
+                  <input
+                    type="text"
+                    class="edit-input"
+                    formControlName="description"
+                    placeholder="Description (optional)"
+                  />
+
+                  <div class="edit-actions">
+                    <button
+                      type="button"
+                      class="btn-save"
+                      [disabled]="unitForm.invalid || isRenaming()"
+                      (click)="saveRename(unit.id)"
+                    >
+                      {{ isRenaming() ? 'Saving...' : 'Save' }}
+                    </button>
+
+                    <button
+                      type="button"
+                      class="secondary-button"
+                      [disabled]="isRenaming()"
+                      (click)="cancelEdit()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+
+              }
+            </ng-container>
+
+            @if (editingUnitId() !== unit.id) {
+
+              <div
+                class="unit-header"
+                (click)="toggleUnit(unit.id)"
+              >
+                <h3 class="unit-title">
+                  {{ unit.title }}
+                </h3>
+
+                <div class="unit-header-right">
+
+                  <span class="lesson-count">
+                    {{ unit.lessons.length }} lessons
+
+                    <span class="toggle-icon">
+                      {{ selectedUnitId() === unit.id ? '▼' : '▶' }}
+                    </span>
+                  </span>
+
+                  <ng-container *appHasRole="UserRole.Teacher">
+                    @if (isCreator() && !currentCourse.isPublished) {
+                      <div
+                        class="unit-actions"
+                        (click)="$event.stopPropagation()"
+                      >
+                        <button
+                          type="button"
+                          class="btn-rename"
+                          (click)="startEdit(unit)"
+                        >
+                          Rename
+                        </button>
+
+                        <button
+                          type="button"
+                          class="btn-delete"
+                          (click)="requestDelete(unit.id)"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    }
+                  </ng-container>
+
+                </div>
+              </div>
+
+              @if (unit.description) {
+                <p class="unit-description">
+                  {{ unit.description }}
+                </p>
+              }
+
+              <ng-container *appHasRole="UserRole.Teacher">
+                @if (isCreator() && !currentCourse.isPublished && deletingUnitId() === unit.id) {
+
+                  <div class="confirm-delete">
+
+                    <span>
+                      Delete
+                      <strong>"{{ unit.title }}"</strong>?
+                      All lessons will also be removed.
+                    </span>
+
+                    <div class="confirm-actions">
+                      <button
+                        type="button"
+                        class="destructive-button"
+                        [disabled]="isDeletingUnit()"
+                        (click)="deleteUnit(unit.id)"
+                      >
+                        {{ isDeletingUnit() ? 'Deleting...' : 'Delete' }}
+                      </button>
+
+                      <button
+                        type="button"
+                        class="secondary-button"
+                        [disabled]="isDeletingUnit()"
+                        (click)="cancelDelete()"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+
+                  </div>
+
+                }
+              </ng-container>
+
+              @if (selectedUnitId() === unit.id) {
+
+                <div class="lessons-container">
+
+                  <div class="lessons-header">
+                    <h4>Lessons</h4>
+
+                    <ng-container *appHasRole="UserRole.Teacher">
+                      @if (isCreator() && !currentCourse.isPublished) {
+                        <button
+                          type="button"
+                          class="primary-button"
+                          (click)="addLesson(unit.id)"
+                        >
+                          + Lesson
+                        </button>
+                      }
+                    </ng-container>
+                  </div>
+
+                  <ul class="lessons-list">
+
+                    @for (lesson of unit.lessons; track lesson.id) {
+
+                      <li class="lesson-item">
+
+                        <div class="lesson-header">
+
+                          <span
+                            class="lesson-type-icon"
+                            [title]="lesson.type"
+                            [attr.aria-label]="lesson.type"
+                          >
+                            {{ lessonTypeIcons[lesson.type] }}
+                          </span>
+
+                          <strong>{{ lesson.title }}</strong>
+
+                          <div class="lesson-actions">
+
+                            @if (isStudent() && isEnrolled()) {
+                              @if (completedLessonsMap().get(lesson.id)) {
+                                <span class="lesson-completed-badge" title="Completed">
+                                  ✓ Completed
+                                </span>
+                              } @else {
+                                <button
+                                  type="button"
+                                  class="btn-complete-lesson"
+                                  [disabled]="isCompletingLesson().has(lesson.id) || completedLessonsMap().get(lesson.id)"
+                                  (click)="markLessonComplete(unit.id, lesson.id, $event)"
+                                >
+                                  {{ isCompletingLesson().has(lesson.id) ? 'Saving...' : 'Mark Complete' }}
+                                </button>
+                              }
+                            }
+
+                            <span class="lesson-duration">
+                              ⏱ {{ lesson.duration }} min
+                            </span>
+
+                            <ng-container *appHasRole="UserRole.Teacher">
+                              @if (isCreator()) {
+                                @if (!currentCourse.isPublished) {
+                                  <button
+                                    type="button"
+                                    class="btn-rename"
+                                    (click)="editLesson(lesson.id)"
+                                  >
+                                    Edit
+                                  </button>
+                                }
+
+                                <button
+                                  type="button"
+                                  class="btn-delete"
+                                  (click)="openDeleteDialog(
+                                    lesson.id,
+                                    lesson.title,
+                                    $event
+                                  )"
+                                >
+                                  Delete
+                                </button>
+                              }
+                            </ng-container>
+
+                          </div>
+
+                        </div>
+
+                        <p class="lesson-desc">
+                          {{ lesson.description }}
+                        </p>
+
+                        <app-lesson-content
+                          [lesson]="lesson"
+                          [isEnrolled]="isEnrolled()"
+                        />
+                      </li>
+
+                    } @empty {
+
+                      <li class="empty-state">
+                        No lessons available in this unit yet.
+                      </li>
+
+                    }
+
+                  </ul>
+
+                </div>
+
+              }
+
+            }
+
+          </li>
+
+        } @empty {
+
+          @if (!isAddingUnit()) {
+            <li class="empty-state">
+              No units available for this course yet.
+            </li>
+          }
+
+        }
+
+        <ng-container *appHasRole="UserRole.Teacher">
+          @if (isCreator() && !currentCourse.isPublished && isAddingUnit()) {
+
+            <li class="unit-item">
+
+              <div
+                class="unit-edit-form"
+                [formGroup]="unitForm"
+              >
+                <input
+                  type="text"
+                  class="edit-input"
+                  formControlName="title"
+                  placeholder="Unit title"
+                />
+
+                @if (
+                  unitForm.controls.title.invalid &&
+                  unitForm.controls.title.touched
+                ) {
+                  <span class="validation-error">
+                    Title is required
+                  </span>
+                }
+
+                <input
+                  type="text"
+                  class="edit-input"
+                  formControlName="description"
+                  placeholder="Description (optional)"
+                />
+
+                <div class="edit-actions">
+                  <button
+                    type="button"
+                    class="btn-save"
+                    [disabled]="unitForm.invalid || isSavingNewUnit()"
+                    (click)="saveNewUnit()"
+                  >
+                    {{ isSavingNewUnit() ? 'Saving...' : 'Save' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="secondary-button"
+                    [disabled]="isSavingNewUnit()"
+                    (click)="cancelEdit()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+            </li>
+
+          }
+        </ng-container>
+
+      </ul>
+
+    </section>
+
+  }
+
+</div>
+
+<ng-container *appHasRole="UserRole.Teacher">
+  @if (lessonToDelete()) {
+
+    <div class="dialog-backdrop">
+
+      <div class="confirmation-dialog">
+
+        <h3>Delete lesson?</h3>
+
+        <p>
+          Are you sure you want to delete
+          <strong>{{ lessonToDelete()?.title }}</strong>?
+        </p>
+
+        <p class="dialog-warning">
+          This action cannot be undone.
+        </p>
+
+        <div class="dialog-actions">
+
+          <button
+            type="button"
+            class="secondary-button"
+            [disabled]="isDeletingLesson()"
+            (click)="closeDeleteDialog()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="destructive-button"
+            [disabled]="isDeletingLesson()"
+            (click)="confirmDelete()"
+          >
+            {{ isDeletingLesson() ? 'Deleting...' : 'Delete' }}
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+  @if (isCreator() && showDeleteCourseDialog()) {
+
+    <div class="dialog-backdrop">
+
+      <div class="confirmation-dialog">
+
+        <h3>Delete course?</h3>
+
+        <p>
+          Are you sure you want to delete
+          <strong>{{ course()?.title }}</strong>?
+        </p>
+
+        <p class="dialog-warning">
+          This action cannot be undone and will delete all units and lessons.
+        </p>
+
+        <div class="dialog-actions">
+
+          <button
+            type="button"
+            class="secondary-button"
+            [disabled]="isDeletingCourse()"
+            (click)="closeDeleteCourseDialog()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="destructive-button"
+            [disabled]="isDeletingCourse()"
+            (click)="deleteCourse()"
+          >
+            {{ isDeletingCourse() ? 'Deleting...' : 'Delete' }}
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+</ng-container>

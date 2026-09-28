@@ -1,0 +1,42 @@
+<header class="app-header">
+	<div class="brand-wrap">
+		<div class="brand-mark">
+			<span class="logo-tile logo-tile-blue">
+				<span class="material-symbols-rounded">menu_book</span>
+			</span>
+			<span class="logo-tile logo-tile-orange">
+				<span class="material-symbols-rounded">check_circle</span>
+			</span>
+			<span class="logo-tile logo-tile-orange">
+				<span class="material-symbols-rounded">fact_check</span>
+			</span>
+			<span class="logo-tile logo-tile-blue">
+				<span class="material-symbols-rounded">swords</span>
+			</span>
+		</div>
+		<p class="brand-title">
+			<span class="brand-title-line">Intel</span>
+			<span class="brand-title-line">Lect</span>
+		</p>
+	</div>
+
+	@if (currentUser()) {
+		<div class="header-actions">
+			<nav class="app-nav" [class.open]="menuOpen()" aria-label="Main navigation">
+				@for (item of navigationItems(); track item.label) {
+					@if (item.route) {
+						<a class="nav-item" [routerLink]="item.route" routerLinkActive="nav-item-active" (click)="closeMenu()">{{ item.label }}</a>
+					} @else if (item.action) {
+						<button class="nav-item nav-item-button" type="button" (click)="handleAction(item.action)">{{ item.label }}</button>
+					} @else {
+						<span class="nav-item">{{ item.label }}</span>
+					}
+				}
+			</nav>
+			<app-user-info />
+			<button class="mobile-toggle" type="button" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen()" aria-label="Toggle navigation menu">
+				<span class="material-symbols-rounded">{{ menuOpen() ? 'close' : 'menu' }}</span>
+			</button>
+		</div>
+	}
+</header>

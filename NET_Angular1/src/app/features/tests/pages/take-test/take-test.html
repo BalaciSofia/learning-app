@@ -1,0 +1,81 @@
+<section class="take-test-shell">
+    @if (isLoading()) {
+        <app-loading-spinner
+            [isLoading]="true"
+            message="Opening test...">
+        </app-loading-spinner>
+    } @else if (test(); as testData) {
+        <article class="surface-card take-test-card">
+            <header class="take-test-header">
+                <div>
+                    <p class="eyebrow">
+                        Question {{ currentQuestionNumber() }} of {{ totalQuestions() }}
+                    </p>
+
+                    <h1>{{ testData.title }}</h1>
+
+                    @if (testData.description) {
+                        <p class="test-description">
+                            {{ testData.description }}
+                        </p>
+                    }
+                </div>
+
+                <button
+                    class="secondary-button back-button"
+                    type="button"
+                    (click)="goBackToTests()"
+                >
+                    Back to tests
+                </button>
+            </header>
+
+            @if (currentQuestion(); as question) {
+                <section class="question-block">
+                    <h2>{{ question.text }}</h2>
+
+                    <p class="question-hint">
+                        @if (isMultipleChoice(question.type)) {
+                            Select one or more answers.
+                        } @else {
+                            Select one answer.
+                        }
+                    </p>
+
+                    <div class="answers-list">
+                        @for (answer of question.answers; track answer.id) {
+                            <button
+                                class="answer-option"
+                                type="button"
+                                [class.selected]="isAnswerSelected(answer.id)"
+                                [disabled]="isSaving()"
+                                (click)="selectAnswer(question.type, answer.id)"
+                            >
+                                {{ answer.text }}
+                            </button>
+                        }
+                    </div>
+
+                    <button
+                        class="primary-button next-button"
+                        type="button"
+                        [disabled]="isSaving()"
+                        (click)="onNext()"
+                    >
+                        @if (isSaving()) {
+                            Saving...
+                        } @else if (isLastQuestion()) {
+                            Submit test
+                        } @else {
+                            Next
+                        }
+                    </button>
+                </section>
+            } @else {
+                <p class="empty-state">
+                    This test has no questions.
+                </p>
+            }
+        </article>
+    }
+</section>

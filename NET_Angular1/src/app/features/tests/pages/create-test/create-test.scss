@@ -1,0 +1,87 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.create-test-shell {
+  display: grid;
+  min-height: calc(100dvh - 4.6rem);
+  place-items: center;
+  padding: 2rem 1rem;
+
+  @include below-sm {
+    align-items: start;
+    padding-top: 1.25rem;
+  }
+}
+
+.create-test-form {
+  display: grid;
+  gap: 1.35rem;
+  width: min(100%, 32rem);
+  padding: 1.75rem;
+
+  @include below-sm {
+    padding: 1.25rem;
+  }
+}
+
+.form-header {
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.title {
+  color: hsl(var(--foreground));
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.subtitle {
+  margin-top: 0.35rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+.form-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-item {
+  min-width: 0;
+}
+
+.text-area {
+  height: auto;
+  padding: 0.6rem 0.8rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--foreground));
+  font-size: 0.93rem;
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  @include below-sm {
+    flex-direction: column-reverse;
+
+    .primary-button, .secondary-button, button {
+      width: 100%;
+    }
+  }
+}
+

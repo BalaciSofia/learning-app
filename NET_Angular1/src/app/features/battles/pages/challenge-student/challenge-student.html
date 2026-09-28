@@ -1,0 +1,76 @@
+<div class="challenge-container">
+  <div class="form-card">
+    <div class="card-header">
+      <h2>Challenge a Student</h2>
+      <p class="subtitle">Select a classmate and a test to initiate a duel.</p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-wrapper">
+        <app-loading-spinner />
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="studentSelect">Select Opponent</label>
+          <select 
+            id="studentSelect" 
+            formControlName="studentId" 
+            class="form-control" 
+          >
+            <option [ngValue]="null" disabled>-- Choose a student --</option>
+            @for (student of students(); track student.id) {
+              <option [ngValue]="student.id">
+                {{ student.firstName }} {{ student.lastName }} ({{ student.email }})
+              </option>
+            }
+          </select>
+          @if (students().length === 0) {
+            <small class="help-text text-warning">No eligible students found in your institution.</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="testSelect">Select Battle Test</label>
+          <select 
+            id="testSelect" 
+            formControlName="testId" 
+            class="form-control" 
+          >
+            <option [ngValue]="null" disabled>-- Choose a test --</option>
+            @for (test of tests(); track test.id) {
+              <option [ngValue]="test.id">
+                {{ test.title }}
+              </option>
+            }
+          </select>
+          @if (tests().length === 0) {
+            <small class="help-text text-warning">No tests available.</small>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="goBack()"
+            [disabled]="isSending()"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="form.invalid || isSending()"
+          >
+            @if (isSending()) {
+              Sending...
+            } @else {
+              Send Challenge
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

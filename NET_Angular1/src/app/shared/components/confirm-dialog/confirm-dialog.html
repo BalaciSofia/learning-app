@@ -1,0 +1,17 @@
+<div class="dialog-backdrop" role="presentation" (click)="cancelled.emit()">
+  <div
+    class="surface-card confirm-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirm-dialog-title"
+    (click)="$event.stopPropagation()"
+  >
+    <h3 class="confirm-dialog-title" id="confirm-dialog-title">{{ title() }}</h3>
+    <p class="confirm-dialog-message">{{ message() }}</p>
+
+    <div class="confirm-dialog-actions">
+      <button class="secondary-button" type="button" [disabled]="isConfirming()" (click)="cancelled.emit()">{{ cancelLabel() }}</button>
+      <button class="destructive-button" type="button" [disabled]="isConfirming()" (click)="confirmed.emit()">{{ confirmLabel() }}</button>
+    </div>
+  </div>
+</div>

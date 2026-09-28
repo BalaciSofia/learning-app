@@ -1,0 +1,81 @@
+<section class="courses-shell">
+  <header class="courses-header">
+    <h1>Courses</h1>
+
+    <a
+      *appHasRole="UserRole.Teacher"
+      class="primary-button"
+      [routerLink]="createCourseRoute"
+    >
+      Create course
+    </a>
+  </header>
+
+  @if (isLoading()) {
+    <p class="loading-state">
+      Loading courses...
+    </p>
+  } @else if (errorMessage()) {
+    <p class="error-state" role="alert">
+      {{ errorMessage() }}
+    </p>
+  } @else if (isStudent()) {
+    @if (enrolledCourses().length === 0 && availableCourses().length === 0) {
+      <p class="empty-state">
+        No courses available yet.
+      </p>
+    } @else {
+      @if (enrolledCourses().length > 0) {
+        <div class="courses-section">
+          <h2 class="section-title">Enrolled Courses</h2>
+          <div class="courses-grid">
+            @for (course of enrolledCourses(); track course.id) {
+              <app-course-card [course]="course" [isEnrolled]="true" />
+            }
+          </div>
+        </div>
+      }
+
+      <div class="courses-section">
+        <h2 class="section-title">Available Courses</h2>
+        <div class="courses-grid">
+          @for (course of availableCourses(); track course.id) {
+            <app-course-card [course]="course" />
+          } @empty {
+            <p class="empty-state">
+              No available courses to enroll in.
+            </p>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    @if (publishedCourses().length === 0 && draftCourses().length === 0) {
+      <p class="empty-state">
+        No courses available yet.
+      </p>
+    } @else {
+      @if (publishedCourses().length > 0) {
+        <div class="courses-section">
+          <h2 class="section-title">Published Courses</h2>
+          <div class="courses-grid">
+            @for (course of publishedCourses(); track course.id) {
+              <app-course-card [course]="course" />
+            }
+          </div>
+        </div>
+      }
+
+      @if (draftCourses().length > 0) {
+        <div class="courses-section">
+          <h2 class="section-title">Draft Courses</h2>
+          <div class="courses-grid">
+            @for (course of draftCourses(); track course.id) {
+              <app-course-card [course]="course" />
+            }
+          </div>
+        </div>
+      }
+    }
+  }
+</section>

@@ -1,0 +1,92 @@
+@use 'app/styles/layout/mixins' as *;
+
+.previous-attempts-shell {
+    min-height: 100%;
+    padding: 2rem;
+
+    @include below-md {
+        padding: 1rem 0.75rem;
+    }
+}
+
+.previous-attempts-card {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    @include below-md {
+        padding: 1.15rem;
+    }
+}
+
+.previous-attempts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    @include below-md {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+
+.previous-attempts-header h1 {
+    margin: 0;
+}
+
+.attempts-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.attempt-card {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+
+    @include below-md {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+
+.attempt-card h2 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.attempt-date {
+    margin: 0.25rem 0 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.875rem;
+}
+
+.attempt-score {
+    display: grid;
+    gap: 0.25rem;
+    text-align: right;
+
+    @include below-md {
+        text-align: left;
+    }
+}
+
+.attempt-score span {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+}
+
+.attempt-score strong {
+    font-size: 1rem;
+}
+
+.empty-state {
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+}

@@ -1,0 +1,207 @@
+<section class="statistics-shell">
+  <div class="statistics-container">
+    <a
+      class="back-link"
+      [routerLink]="testDetailRoute"
+    >
+      &larr; Back to test
+    </a>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+              <app-loading-spinner
+        [isLoading]="true"
+        message="Loading statistics..."
+      />
+      </div>
+    } @else if (hasLoadError()) {
+      <div class="surface-card error-state">
+        <span class="material-symbols-rounded">
+          error
+        </span>
+
+        <h1>Statistics unavailable</h1>
+
+        <p>
+          The test statistics could not be loaded.
+        </p>
+
+        <button
+          class="primary-button"
+          type="button"
+          (click)="retry()"
+        >
+          Try again
+        </button>
+      </div>
+    } @else if (test(); as loadedTest) {
+      @if (statistics(); as stats) {
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">
+              Test statistics
+            </p>
+
+            <h1>
+              {{ loadedTest.title }}
+            </h1>
+
+            @if (loadedTest.description) {
+              <p class="description">
+                {{ loadedTest.description }}
+              </p>
+            }
+          </div>
+        </header>
+
+        <div class="metrics-grid">
+          <article class="surface-card metric-card">
+            <span class="metric-icon material-symbols-rounded">
+              groups
+            </span>
+
+            <div>
+              <p class="metric-label">
+                Submitted attempts
+              </p>
+
+              <p class="metric-value">
+                {{ stats.attemptCount }}
+              </p>
+            </div>
+          </article>
+
+          <article class="surface-card metric-card">
+            <span class="metric-icon material-symbols-rounded">
+              analytics
+            </span>
+
+            <div>
+              <p class="metric-label">
+                Average score
+              </p>
+
+              <p class="metric-value">
+                {{ formatScore(stats.averageScore) }}
+              </p>
+            </div>
+          </article>
+
+          <article class="surface-card metric-card">
+            <span
+              class="metric-icon success material-symbols-rounded"
+            >
+              trending_up
+            </span>
+
+            <div>
+              <p class="metric-label">
+                Highest score
+              </p>
+
+              <p class="metric-value">
+                {{ formatScore(stats.highScore) }}
+              </p>
+            </div>
+          </article>
+
+          <article class="surface-card metric-card">
+            <span
+              class="metric-icon warning material-symbols-rounded"
+            >
+              trending_down
+            </span>
+
+            <div>
+              <p class="metric-label">
+                Lowest score
+              </p>
+
+              <p class="metric-value">
+                {{ formatScore(stats.lowScore) }}
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <section class="surface-card breakdown-card">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">
+                Question breakdown
+              </p>
+
+              <h2>
+                Correct answer rate
+              </h2>
+            </div>
+
+            <span class="meta-pill">
+              {{ stats.questionBreakdown.length }} questions
+            </span>
+          </div>
+
+          @if (stats.attemptCount === 0) {
+            <div class="empty-state">
+              <span class="material-symbols-rounded">
+                query_stats
+              </span>
+
+              <h3>
+                No submitted attempts yet
+              </h3>
+
+              <p>
+                Statistics will appear after students submit this test.
+              </p>
+            </div>
+          } @else {
+            <div class="questions-list">
+              @for (
+                question of stats.questionBreakdown;
+                track question.questionId;
+                let index = $index
+              ) {
+                <article class="question-row">
+                  <div class="question-header">
+                    <p class="question-text">
+                      {{ index + 1 }}. {{ question.text }}
+                    </p>
+
+                    <span class="rate-value">
+                      {{ formatScore(question.correctRate) }}
+                    </span>
+                  </div>
+
+                  <div
+                    class="progress-track"
+                    role="progressbar"
+                    aria-label="Correct answer rate"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [attr.aria-valuenow]="question.correctRate"
+                  >
+                    <div
+                      class="progress-value"
+                      [style.width.%]="question.correctRate"
+                    ></div>
+                  </div>
+                </article>
+              } @empty {
+                <div class="empty-state">
+                  <span class="material-symbols-rounded">
+                    help
+                  </span>
+
+                  <h3>
+                    No question statistics available
+                  </h3>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      }
+    }
+  </div>
+</section>

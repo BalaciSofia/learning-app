@@ -1,0 +1,88 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.courses-shell {
+  display: grid;
+  gap: 1.5rem;
+  width: min(100%, 72rem);
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  @include below-sm {
+    padding: 1.25rem 1rem;
+  }
+}
+
+.courses-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @include below-sm {
+    align-items: stretch;
+    flex-direction: column;
+
+    .primary-button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+.courses-header h1 {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-size: 2rem;
+}
+
+.courses-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-title {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1.25rem;
+
+  @include below-sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}
+
+.loading-state,
+.error-state {
+  padding: 2rem;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.loading-state {
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted) / 0.5);
+}
+
+.error-state {
+  border: 1px solid hsl(var(--destructive) / 0.2);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.06);
+}

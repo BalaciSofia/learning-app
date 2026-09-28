@@ -1,0 +1,90 @@
+<div class="take-duel-container">
+  @if (isLoading()) {
+    <div class="loading-wrapper">
+      <app-loading-spinner />
+    </div>
+  } @else if (submitOutcome(); as outcome) {
+    <!-- RESULT CARD SCREEN -->
+    <div class="result-card">
+      <div class="result-icon">
+        @if (outcome.isCompleted) {
+          <span class="material-symbols-rounded">emoji_events</span>
+        } @else {
+          <span class="material-symbols-rounded">hourglass_top</span>
+        }
+      </div>
+      <h2>{{ outcome.message }}</h2>
+
+      @if (outcome.isCompleted && outcome.result; as res) {
+        <div class="result-details">
+          <p class="winner-text">
+            @if (res.isDraw) {
+              It's a Draw!
+            } @else {
+              Winner: <strong>{{ res.winnerName }}</strong>!
+            }
+          </p>
+          <div class="score-summary">
+            <span>Challenger Correct: <strong>{{ res.challengerCorrectAnswers }}</strong></span>
+            <span>Challenged Correct: <strong>{{ res.challengedCorrectAnswers }}</strong></span>
+          </div>
+        </div>
+      } @else {
+        <p class="waiting-text">
+          Your answers have been recorded. Once your opponent completes their duel attempt, the winner will be determined!
+        </p>
+      }
+
+      <button class="btn btn-primary" (click)="returnToDashboard()">
+        Back to Battles Dashboard
+      </button>
+    </div>
+  } @else if (currentQuestion(); as question) {
+    <!-- TEST TAKING SCREEN -->
+    <div class="quiz-card">
+      <div class="quiz-header">
+        <span class="question-progress">
+          Question {{ currentQuestionNumber() }} of {{ totalQuestions() }}
+        </span>
+        <button class="btn-cancel" (click)="returnToDashboard()">Quit</button>
+      </div>
+
+      <div class="question-content">
+        <h3 class="question-title">{{ question.text }}</h3>
+      </div>
+
+      <div class="answers-list">
+        @for (answer of question.answers; track answer.id) {
+          <div 
+            class="answer-option" 
+            [class.selected]="isAnswerSelected(answer.id)"
+            (click)="selectAnswer(question.type, answer.id)"
+          >
+            <div class="checkbox-indicator">
+              @if (isAnswerSelected(answer.id)) {
+                <span class="material-symbols-rounded icon-sm">check</span>
+              }
+            </div>
+            <span class="answer-text">{{ answer.text }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="quiz-footer">
+        <button 
+          class="btn btn-primary btn-next" 
+          [disabled]="isSaving() || selectedAnswerIds().length === 0"
+          (click)="onNext()"
+        >
+          @if (isSaving()) {
+            Saving...
+          } @else if (isLastQuestion()) {
+            Submit Battle
+          } @else {
+            Next Question <span class="material-symbols-rounded icon-inline">arrow_forward</span>
+          }
+        </button>
+      </div>
+    </div>
+  }
+</div>

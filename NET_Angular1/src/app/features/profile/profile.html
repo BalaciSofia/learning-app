@@ -1,0 +1,57 @@
+@if (profilePanelService.isOpen()) {
+    <div class="profile-panel-backdrop" (click)="profilePanelService.close()"></div>
+}
+
+<aside class="profile-panel" [class.open]="profilePanelService.isOpen()">
+    <div class="profile-panel-header">
+        <h2 class="panel-title">My Profile</h2>
+        <button class="icon-button" type="button" (click)="profilePanelService.close()" aria-label="Close profile panel">
+            <span class="material-symbols-rounded">close</span>
+        </button>
+    </div>
+
+    @if (profilePanelService.isLoading()) {
+        <p class="field-label">Loading profile...</p>
+    } @else if (profilePanelService.profile(); as user) {
+        <div class="profile-summary">
+            <div class="profile-avatar">{{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}</div>
+            <div class="profile-summary-text">
+                <p class="profile-name">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="profile-email">{{ user.email }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <div class="profile-item">
+                <span class="field-label">Role</span>
+                <span class="meta-pill role-badge" [attr.data-role]="user.role.toLowerCase()">{{ user.role }}</span>
+            </div>
+
+            @if (user.institutionName) {
+                <div class="profile-item">
+                    <span class="field-label">Institution</span>
+                    <span class="profile-value">{{ user.institutionName }}</span>
+                </div>
+            }
+        </div>
+
+        <div class="form-actions">
+            <a class="primary-button" [routerLink]="changePasswordRoute" (click)="profilePanelService.close()">Change password</a>
+        <button class="danger-button" type="button" (click)="onDeleteAccount(user.id)">
+                <span class="material-symbols-rounded">delete</span>
+                Delete account
+            </button>
+        </div>
+    } @else {
+        <p class="field-error">Could not load your profile.</p>
+    }
+</aside>
+@if (userIdToDelete()) {
+    <app-confirm-dialog
+        title="Delete Account?"
+        message="Are you sure you want to delete your account? This action cannot be undone and you will be logged out immediately."
+        confirmLabel="Delete Account"
+        (confirmed)="confirmDeleteAccount()"
+        (cancelled)="cancelDeleteAccount()"
+    />
+}

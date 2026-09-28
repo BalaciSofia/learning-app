@@ -1,0 +1,22 @@
+{
+  "name": "AngularApp",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "angular-app",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Angular.ng-template",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "typescript.tsdk": "/app/node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": false
+      }
+    }
+  }
+}

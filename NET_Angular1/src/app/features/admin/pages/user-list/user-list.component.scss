@@ -1,0 +1,193 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.user-list-shell {
+  display: grid;
+  gap: 1.5rem;
+  width: min(100%, 72rem);
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  @include below-sm {
+    padding: 1.25rem 1rem;
+  }
+}
+
+.user-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.user-list-header h1 {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-size: 2rem;
+}
+
+.tabs-bar {
+  display: flex;
+  gap: 1.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+
+  @include below-sm {
+    gap: 0.75rem;
+    overflow-x: auto;
+  }
+}
+
+.tab-button {
+  padding: 0.6rem 0.25rem;
+  border: none;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+
+  &:hover {
+    color: hsl(var(--foreground));
+  }
+
+  &.active {
+    color: hsl(var(--primary));
+    border-bottom-color: hsl(var(--primary));
+    font-weight: 600;
+  }
+}
+
+.user-table-wrapper {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.user-table thead {
+  background: hsl(var(--muted) / 0.5);
+}
+
+.user-table th,
+.user-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: hsl(var(--foreground));
+  vertical-align: middle;
+
+  @include below-sm {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.85rem;
+  }
+}
+
+.user-table th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: hsl(var(--muted-foreground));
+}
+
+.user-table tbody tr {
+  border-bottom: 1px solid hsl(var(--border));
+  transition: background 0.15s ease;
+}
+
+.user-table tbody tr:hover {
+  background: hsl(var(--muted) / 0.3);
+}
+
+.role-select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  &:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  text-transform: capitalize;
+}
+
+.save-button {
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.danger-button {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--destructive) / 0.3);
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground, #fff));
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.loading-state,
+.error-state {
+  padding: 2rem;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.loading-state {
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted) / 0.5);
+}
+
+.error-state {
+  border: 1px solid hsl(var(--destructive) / 0.2);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.06);
+}
+
+.empty-state {
+  padding: 2rem 0;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}

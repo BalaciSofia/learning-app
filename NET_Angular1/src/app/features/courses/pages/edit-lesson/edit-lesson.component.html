@@ -1,0 +1,38 @@
+<div class="lesson-page">
+
+  <button type ="button" class="back-btn" (click)="goBack()">
+    &larr; Back to Course
+  </button>
+
+  @if (errorMessage()) {
+    <div class="error-state">
+      <span class="icon">⚠️</span>
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+
+  <app-loading-spinner
+    [isLoading]="true"
+    message="Loading lesson..."
+    [diameter]="40">
+  </app-loading-spinner>
+
+} @else if (!errorMessage()) {
+
+  <app-lesson-form
+    [form]="lessonForm"
+    [lessonTypes]="lessonTypes"
+    [tests]="tests()"
+    [isSaving]="isSaving()"
+    title="Edit Lesson"
+    description="Update the lesson details and content."
+    submitText="Update Lesson"
+    savingText="Updating..."
+    (cancel)="goBack()"
+    (submitForm)="onSubmit()">
+  </app-lesson-form>
+
+}
+</div>

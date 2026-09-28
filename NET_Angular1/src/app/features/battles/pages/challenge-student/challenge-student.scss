@@ -1,0 +1,136 @@
+@use 'app/styles/layout/mixins' as *;
+
+.challenge-container {
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+
+  @include below-sm {
+    padding: 1rem 0.5rem;
+  }
+}
+
+.form-card {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 550px;
+  padding: 2rem;
+
+  @include below-sm {
+    padding: 1.25rem;
+  }
+}
+
+.card-header {
+  margin-bottom: 1.75rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin: 0 0 0.35rem 0;
+  }
+
+  .subtitle {
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--muted));
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
+      background-color: hsl(var(--card));
+    }
+  }
+
+  .help-text {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: hsl(var(--warning));
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--border));
+
+  @include below-sm {
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-secondary {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    &:hover:not(:disabled) { background-color: hsl(var(--border)); }
+  }
+
+  .btn-primary {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    &:hover:not(:disabled) { background-color: hsl(87 44% 66%); }
+  }
+}
+
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.icon-inline {
+  font-size: 1.1em;
+  vertical-align: middle;
+}
+
+

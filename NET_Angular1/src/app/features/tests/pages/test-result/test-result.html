@@ -1,0 +1,85 @@
+<section class="test-result-shell">
+    @if (isLoading()) {
+        <app-loading-spinner
+            [isLoading]="true"
+            message="Loading result...">
+        </app-loading-spinner>
+    } @else {
+        <article class="surface-card test-result-card">
+            @if (result(); as resultData) {
+                <p class="eyebrow">Test completed</p>
+
+                <h1>Test Result</h1>
+
+                <div
+                    class="result-status"
+                    [class.passed]="isPassed()"
+                    [class.failed]="!isPassed()"
+                >
+                    @if (isPassed()) {
+                        Passed
+                    } @else {
+                        Failed
+                    }
+                </div>
+
+                <div class="score-grid">
+                    <div class="score-item">
+                        <span class="score-label">Total score</span>
+                        <strong>{{ resultData.score }} / {{ resultData.maxScore }}</strong>
+                    </div>
+
+                    <div class="score-item">
+                        <span class="score-label">Percentage</span>
+                        <strong>{{ percentage() }}%</strong>
+                    </div>
+
+                    <div class="score-item">
+                        <span class="score-label">Correct answers</span>
+                        <strong>{{ resultData.correctAnswers }} / {{ resultData.totalQuestions }}</strong>
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button
+                        class="primary-button"
+                        type="button"
+                        (click)="viewQuestionReview()"
+                    >
+                        Question review
+                    </button>
+
+                    <button
+                        class="primary-button"
+                        type="button"
+                        (click)="viewPreviousAttempts()"
+                    >
+                        Previous attempts
+                    </button>
+
+                    <button
+                        class="primary-button"
+                        type="button"
+                        (click)="goBackToTests()"
+                    >
+                        Back to tests
+                    </button>
+                </div>
+            } @else {
+                <h1>Result unavailable</h1>
+
+                <p class="empty-state">
+                    The test result could not be loaded. Please go back to the tests page.
+                </p>
+
+                <button
+                    class="primary-button"
+                    type="button"
+                    (click)="goBackToTests()"
+                >
+                    Back to tests
+                </button>
+            }
+        </article>
+    }
+</section>

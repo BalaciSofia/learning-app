@@ -1,0 +1,52 @@
+<div class="map-container">
+  @if (zones.length === 0) {
+    <p class="no-zones-msg">No available zones to conquer in this course.</p>
+  } @else {
+    <div class="serpentine-map">
+      @for (row of serpentineRows; track rowIndex; let rowIndex = $index) {
+        
+        <div class="map-row">
+          @for (zone of row; track zone.id; let colIndex = $index) {
+            <div class="zone-item-wrapper">
+              <app-conquest-node 
+                [zone]="zone" 
+                (zoneClick)="onZoneClick(zone)">
+              </app-conquest-node>
+            </div>
+
+            @if (colIndex < row.length - 1) {
+              @let globalLinkIndex = (rowIndex * 2) + colIndex;
+              @let treasure = getTreasureForIndex(globalLinkIndex);
+
+              <div 
+                class="connector-line horizontal" 
+                [class.completed]="zone.status === ZoneStatus.Conquered"
+                [class.point-right]="rowIndex % 2 === 0"
+                [class.point-left]="rowIndex % 2 === 1">
+                
+                @if (treasure) {
+                  <div class="treasure-node" 
+                       [class.claimed]="treasure.status === 'completed'" 
+                       (click)="onTreasureClick(treasure, $event)"
+                       [title]="treasure.name">
+                    {{ treasure.icon }}
+                  </div>
+                }
+              </div>
+            }
+          }
+        </div>
+
+        @if (rowIndex < serpentineRows.length - 1) {
+          <div class="row-transition-wrapper" [class.align-right]="rowIndex % 2 === 0">
+            <div 
+              class="connector-line vertical" 
+              [class.completed]="(rowIndex % 2 === 0 ? row[row.length - 1] : row[0]).status === ZoneStatus.Conquered">
+            </div>
+          </div>
+        }
+
+      }
+    </div>
+  }
+</div>

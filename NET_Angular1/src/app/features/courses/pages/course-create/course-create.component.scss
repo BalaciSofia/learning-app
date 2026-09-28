@@ -1,0 +1,158 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+  display: block;
+}
+
+.course-create-page {
+  display: grid;
+  place-items: start center;
+  padding: 2.5rem 1.5rem;
+
+  @include below-sm {
+    padding: 1.5rem 1rem;
+  }
+}
+
+.course-form {
+  display: grid;
+  gap: 1.5rem;
+  width: min(100%, 46rem);
+  padding: 2rem;
+
+  @include below-sm {
+    padding: 1.25rem;
+  }
+}
+
+.form-header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-header h1 {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-size: 2rem;
+}
+
+.form-header p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
+
+.form-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field textarea {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15);
+}
+
+.form-field input.ng-invalid.ng-touched,
+.form-field textarea.ng-invalid.ng-touched {
+  border-color: hsl(var(--destructive));
+}
+
+.field-error {
+  margin: 0;
+  color: hsl(var(--destructive));
+  font-size: 0.8rem;
+}
+
+.form-error {
+  padding: 0.85rem 1rem;
+  border: 1px solid hsl(var(--destructive) / 0.25);
+  border-radius: var(--radius);
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.08);
+  font-size: 0.9rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+
+  @include below-sm {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.form-actions button {
+  min-width: 7rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.secondary-button {
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  background: transparent;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: hsl(var(--muted));
+}
+
+.primary-button {
+  border: 1px solid hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
+}
+
+.primary-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.form-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}

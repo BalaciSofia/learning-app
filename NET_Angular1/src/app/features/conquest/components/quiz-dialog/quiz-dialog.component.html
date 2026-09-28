@@ -1,0 +1,48 @@
+<div class="modal-backdrop" (click)="onClose()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    
+    <header class="modal-header">
+      <h3>Test if you're worthy to conquer this land</h3>
+      <button class="close-btn" (click)="onClose()" [disabled]="isSubmitting">✕</button>
+    </header>
+
+    <div class="modal-body">
+      <p class="question-title">{{ question.text }}</p>
+
+      <div class="options-list">
+        @for (answer of question.answers; track answer.id) {
+          <button 
+            type="button" 
+            class="option-item"
+            [class.selected]="selectedOptionId === answer.id"
+            (click)="selectOption(answer.id)"
+            [disabled]="isSubmitting">
+            {{ answer.text }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button 
+        type="button" 
+        class="btn-secondary" 
+        (click)="onClose()" 
+        [disabled]="isSubmitting">
+        Anulează
+      </button>
+      <button 
+        type="button" 
+        class="btn-primary" 
+        [disabled]="selectedOptionId === null || isSubmitting"
+        (click)="onSubmit()">
+        @if (isSubmitting) {
+          <span>Verifying...</span>
+        } @else {
+          <span>Send answer</span>
+        }
+      </button>
+    </footer>
+
+  </div>
+</div>

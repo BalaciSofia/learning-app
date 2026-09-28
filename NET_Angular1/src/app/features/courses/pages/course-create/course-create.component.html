@@ -1,0 +1,158 @@
+<section class="course-create-page">
+  <form
+    class="surface-card course-form"
+    [formGroup]="courseForm"
+    (ngSubmit)="onSubmit()"
+    novalidate
+  >
+    <div class="form-header">
+      <h1>Create course</h1>
+      <p>Complete the information below to create a new course.</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="form-error" role="alert">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="form-field">
+      <label for="title">Course title</label>
+
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        maxlength="200"
+        placeholder="Enter the course title"
+      />
+
+      @if (
+        courseForm.controls.title.touched &&
+        courseForm.controls.title.hasError('required')
+      ) {
+        <p class="field-error">
+          Course title is required.
+        </p>
+      }
+
+      @if (
+        courseForm.controls.title.touched &&
+        courseForm.controls.title.hasError('maxlength')
+      ) {
+        <p class="field-error">
+          Course title cannot exceed 200 characters.
+        </p>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="description">Description</label>
+
+      <textarea
+        id="description"
+        formControlName="description"
+        maxlength="2000"
+        rows="6"
+        placeholder="Enter the course description"
+      ></textarea>
+
+      @if (
+        courseForm.controls.description.touched &&
+        courseForm.controls.description.hasError('required')
+      ) {
+        <p class="field-error">
+          Description is required.
+        </p>
+      }
+
+      @if (
+        courseForm.controls.description.touched &&
+        courseForm.controls.description.hasError('maxlength')
+      ) {
+        <p class="field-error">
+          Description cannot exceed 2000 characters.
+        </p>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="subject">Subject</label>
+
+      <input
+        id="subject"
+        type="text"
+        formControlName="subject"
+        maxlength="100"
+        placeholder="Enter the course subject"
+      />
+
+      @if (
+        courseForm.controls.subject.touched &&
+        courseForm.controls.subject.hasError('required')
+      ) {
+        <p class="field-error">
+          Subject is required.
+        </p>
+      }
+
+      @if (
+        courseForm.controls.subject.touched &&
+        courseForm.controls.subject.hasError('maxlength')
+      ) {
+        <p class="field-error">
+          Subject cannot exceed 100 characters.
+        </p>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="metadata">Grade / Level</label>
+
+      <input
+        id="metadata"
+        type="text"
+        formControlName="metadata"
+        maxlength="50"
+        placeholder="For example: Beginner or Grade 10"
+      />
+
+      @if (
+        courseForm.controls.metadata.touched &&
+        courseForm.controls.metadata.hasError('required')
+      ) {
+        <p class="field-error">
+          Grade or level is required.
+        </p>
+      }
+
+      @if (
+        courseForm.controls.metadata.touched &&
+        courseForm.controls.metadata.hasError('maxlength')
+      ) {
+        <p class="field-error">
+          Grade or level cannot exceed 50 characters.
+        </p>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        [disabled]="isSaving()"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="isSaving()"
+      >
+        {{ isSaving() ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</section>

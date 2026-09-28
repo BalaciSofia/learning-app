@@ -1,0 +1,68 @@
+<section class="dashboard-shell">
+    @if (currentUser(); as user) {
+        <header class="dashboard-hero">
+            <div class="hero-avatar">{{ initials() }}</div>
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    @if (user.role === UserRole.Basic) {
+                        Welcome, {{ user.name }}
+                    } @else {
+                        Welcome back, {{ user.name }}
+                    }
+                </h1>
+                <p class="hero-subtitle">
+                    <span class="meta-pill role-badge" [attr.data-role]="user.role.toLowerCase()">{{ user.role }}</span>
+                    Here's what's happening in Intellect today.
+                </p>
+            </div>
+        </header>
+
+        @if (user.role === UserRole.Basic) {
+            <div class="surface-card empty-state">
+                <span class="material-symbols-rounded empty-state-icon">hourglass_top</span>
+                <p class="empty-state-title">You're all set!</p>
+                <p class="empty-state-subtitle">Someone will assign you a role shortly.</p>
+            </div>
+        } @else {
+            <div class="quick-links-grid">
+                <a *appHasRole="[UserRole.Student, UserRole.Teacher, UserRole.Admin]" class="surface-card quick-link" [routerLink]="testingRoute">
+                    <span class="material-symbols-rounded quick-link-icon">fact_check</span>
+                    <p class="quick-link-title">Tests</p>
+                    <p class="quick-link-subtitle">
+                        @if (user.role === UserRole.Teacher) {
+                            Create and manage your tests
+                        } @else {
+                            Take tests and view your results
+                        }
+                    </p>
+                </a>
+
+                <a *appHasRole="[UserRole.Student, UserRole.Teacher, UserRole.Admin]" class="surface-card quick-link" [routerLink]="coursesRoute">
+                    <span class="material-symbols-rounded quick-link-icon">school</span>
+                    <p class="quick-link-title">Courses</p>
+                    <p class="quick-link-subtitle">Browse and continue your courses</p>
+                </a>
+
+                <a *appHasRole="UserRole.Student" class="surface-card quick-link" [routerLink]="battlesRoute">
+                    <span class="material-symbols-rounded quick-link-icon">swords</span>
+                    <p class="quick-link-title">Battle</p>
+                    <p class="quick-link-subtitle">Duel other students head to head</p>
+                </a>
+
+                <a *appHasRole="UserRole.Admin" class="surface-card quick-link" [routerLink]="adminRoute">
+                    <span class="material-symbols-rounded quick-link-icon">admin_panel_settings</span>
+                    <p class="quick-link-title">User Management</p>
+                    <p class="quick-link-subtitle">Manage users and roles</p>
+                </a>
+            </div>
+        }
+
+        <div class="dashboard-waves" aria-hidden="true">
+            <svg class="waves-svg" viewBox="0 0 1440 220" preserveAspectRatio="none">
+                <path class="wave wave-1" d="M0,120 C240,180 480,60 720,100 C960,140 1200,40 1440,90 L1440,220 L0,220 Z"></path>
+                <path class="wave wave-2" d="M0,150 C240,90 480,190 720,140 C960,90 1200,170 1440,130 L1440,220 L0,220 Z"></path>
+                <path class="wave wave-3" d="M0,170 C240,140 480,200 720,160 C960,120 1200,190 1440,160 L1440,220 L0,220 Z"></path>
+            </svg>
+        </div>
+    }
+</section>

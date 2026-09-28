@@ -1,0 +1,39 @@
+<div 
+  class="node-card" 
+  [class]="zone.status.toLowerCase()"
+  [class.clickable]="isAvailable"
+  (click)="onNodeClick()">
+  
+  <div class="icon-container">
+    <span class="icon">{{ zone.icon }}</span>
+    
+    @if (isConquered || isLocked) {
+      <div class="badge-overlay">
+        @if (isConquered) {
+          <span class="check-icon">✓</span>
+        } @else if (isLocked) {
+          <span class="lock-icon">🔒</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="node-info">
+    <span class="node-name">{{ zone.name }}</span>
+    <span class="xp-badge">+{{ zone.xpReward }} XP</span>
+  </div>
+
+  <div class="status-label">
+    @switch (zone.status) {
+      @case (ZoneStatus.Conquered) {
+        <span class="text-conquered">Claimed</span>
+      }
+      @case (ZoneStatus.Available) {
+        <span class="text-available">Conquer</span>
+      }
+      @case (ZoneStatus.Locked) {
+        <span class="text-locked">Locked</span>
+      }
+    }
+  </div>
+</div>

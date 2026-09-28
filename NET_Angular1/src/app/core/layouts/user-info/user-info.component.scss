@@ -1,0 +1,82 @@
+@use 'app/styles/layout/mixins' as *;
+
+.user-info-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem; 
+
+  @include below-md {
+    gap: 0.5rem;
+  }
+}
+
+.user-profile-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; 
+  padding: 0.5rem 1.25rem;
+  background-color: #f8fafc; 
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px; 
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  @include below-md {
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+  }
+}
+
+.icon-role {
+  color: #64748b; 
+}
+
+.username-text {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+
+  @include below-sm {
+    display: none;
+  }
+}
+
+.role-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  @include below-sm {
+    display: none;
+  }
+}
+
+.badge-student {
+  background-color: #eef5e3;
+  color: #4a6b32;
+}
+
+.badge-teacher {
+  background-color: hsl(var(--accent) / 0.14);
+  color: hsl(var(--accent));
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #ef4444; 
+    background-color: #fee2e2;
+  }
+}

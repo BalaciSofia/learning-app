@@ -1,0 +1,100 @@
+<section class="sq-shell">
+  <a class="back-link" [routerLink]="['/', routePaths.courses, 'details', courseId]">
+    <span class="material-symbols-rounded">arrow_back</span>
+    Back to course
+  </a>
+
+  @if (isLoading()) {
+  <p class="loading-state">Loading profile...</p>
+  } @else if (errorMessage()) {
+  <p class="error-state" role="alert">{{ errorMessage() }}</p>
+  } @else if (profile(); as p) {
+
+  <div class="sq-card profile-header">
+    <div class="avatar">{{ p.initials }}</div>
+    <div class="profile-meta">
+      <h2 class="profile-name">{{ p.name }}</h2>
+      <div class="profile-badges">
+        <span class="meta-pill">
+          <span class="material-symbols-rounded">military_tech</span>
+          Level {{ p.level }}
+        </span>
+        <span class="meta-pill">
+          <span class="material-symbols-rounded">workspace_premium</span>
+          {{ p.rank }}
+        </span>
+        <span class="meta-pill xp-pill">
+          <span class="material-symbols-rounded">bolt</span>
+          {{ p.xp }} XP
+        </span>
+      </div>
+    </div>
+  </div>
+
+    <div class="sq-card stats-section">
+      <h3 class="section-title">Today's Activity</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="material-symbols-rounded stat-icon streak">local_fire_department</span>
+          <span class="stat-value">{{ p.streak }}</span>
+          <span class="stat-label">Streak</span>
+        </div>
+      </div>
+    </div>
+
+    @if (puzzle(); as puz) {
+      <div class="sq-card puzzle-section">
+        <h3 class="section-title">
+          <span class="material-symbols-rounded">lightbulb</span>
+          Daily Puzzle
+        </h3>
+        <p class="puzzle-question">{{ puz.questionText }}</p>
+        @if (puzzleResult(); as result) {
+          <div class="puzzle-result" [class.correct]="result.correct" [class.incorrect]="!result.correct && !result.alreadyClaimed">
+            @if (result.alreadyClaimed) {
+              <span class="material-symbols-rounded">check_circle</span> Already answered today
+            } @else if (result.correct) {
+              <span class="material-symbols-rounded">check_circle</span> Correct! +{{ result.xpAwarded }} XP
+            } @else {
+              <span class="material-symbols-rounded">cancel</span> Wrong answer
+            }
+          </div>
+        } @else if (puz.alreadyClaimed) {
+          <div class="puzzle-result claimed">
+            <span class="material-symbols-rounded">check_circle</span> Already answered today
+          </div>
+        } @else {
+          <div class="puzzle-options">
+            @for (option of puz.options; track $index) {
+              <button class="puzzle-option" (click)="answerPuzzle($index)" [disabled]="isPuzzleAnswering()">
+                {{ option }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (p.medals.length > 0) {
+      <div class="sq-card medals-section">
+        <h3 class="section-title">
+          <span class="material-symbols-rounded">emoji_events</span>
+          Medals
+        </h3>
+        <div class="medals-list">
+          @for (medal of p.medals; track medal) {
+            <span class="medal-badge">{{ medal }}</span>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="sq-actions">
+      <button class="primary-button" (click)="navigateToConquest()">
+        <span class="material-symbols-rounded">map</span>
+        Conquest
+      </button>
+    </div>
+
+  }
+</section>

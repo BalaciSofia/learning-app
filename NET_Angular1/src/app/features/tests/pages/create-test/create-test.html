@@ -1,0 +1,41 @@
+<section class="create-test-shell">
+  <form class="surface-card create-test-form" [formGroup]="createTestForm" (ngSubmit)="onSubmit()">
+    <header class="form-header">
+      <h1 class="title">Create a new test</h1>
+      <p class="subtitle">Start with the basics you can add questions after saving.</p>
+    </header>
+
+    <div class="form-fields">
+      <div class="form-item">
+        <label class="field-label" for="title">Title</label>
+        <input class="text-field" id="title" type="text" formControlName="title" />
+        @if (createTestForm.get('title')?.hasError('required') && createTestForm.get('title')?.touched) {
+          <p class="field-error">Title is required.</p>
+        }
+        @if (createTestForm.get('title')?.hasError('maxlength')) {
+          <p class="field-error">Title cannot exceed 200 characters.</p>
+        }
+      </div>
+
+      <div class="form-item">
+        <label class="field-label" for="description">Description (optional)</label>
+        <textarea class="text-field text-area" id="description" rows="4" formControlName="description"></textarea>
+        @if (createTestForm.get('description')?.hasError('maxlength')) {
+          <p class="field-error">Description cannot exceed 2000 characters.</p>
+        }
+      </div>
+
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="isRetakeAllowed" />
+        Allow retakes
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button class="secondary-button" type="button" (click)="onCancel()">Cancel</button>
+      <button class="primary-button" type="submit" [disabled]="createTestForm.invalid || isSubmitting()">
+        {{ isSubmitting() ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</section>

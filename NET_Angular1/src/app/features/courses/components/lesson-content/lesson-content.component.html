@@ -1,0 +1,95 @@
+<section class="lesson-content">
+  @switch (lesson().type) {
+    @case (LessonType.Video) {
+      @if (lesson().content.videoUrl; as videoUrl) {
+        <a
+          class="video-card"
+          [href]="videoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'Open video: ' + lesson().title"
+        >
+          @if (videoThumbnailUrl(); as thumbnailUrl) {
+            <img
+              class="video-thumbnail"
+              [src]="thumbnailUrl"
+              [alt]="'Thumbnail for ' + lesson().title"
+            />
+          } @else {
+            <div class="video-placeholder">
+              <span class="video-placeholder-icon">🎬</span>
+              <span>Open video</span>
+            </div>
+          }
+
+          <span
+            class="video-play-button"
+            aria-hidden="true"
+          >
+            ▶
+          </span>
+        </a>
+      } @else {
+        <p class="content-unavailable">
+          The video URL is not available.
+        </p>
+      }
+    }
+
+    @case (LessonType.Reading) {
+      <div
+        class="lesson-text-box"
+        role="textbox"
+        aria-readonly="true"
+      >
+        {{
+          lesson().content.bodyText ||
+          'Reading content is not available.'
+        }}
+      </div>
+    }
+
+    @case (LessonType.Activity) {
+      <div
+        class="lesson-text-box"
+        role="textbox"
+        aria-readonly="true"
+      >
+        {{
+          lesson().content.bodyText ||
+          'Activity content is not available.'
+        }}
+      </div>
+    }
+
+    @case (LessonType.Quiz) {
+  <div class="quiz-panel">
+    <div>
+      <strong>Quiz lesson</strong>
+
+      <p>
+        Open the test associated with this lesson.
+      </p>
+
+      @if (!canOpenQuiz()) {
+        <p class="quiz-access-message">
+          Enroll in the course to access this quiz.
+        </p>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="quiz-button"
+      [disabled]="
+        lesson().content.quizId === null ||
+        !canOpenQuiz()
+      "
+      (click)="openQuiz()"
+    >
+      Open quiz
+    </button>
+  </div>
+}
+  }
+</section>

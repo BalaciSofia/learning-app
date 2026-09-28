@@ -1,0 +1,26 @@
+$bp-sm: 36rem;   // 576px – small phones
+$bp-md: 48rem;   // 768px – tablets
+$bp-lg: 64rem;   // 1024px – small laptops
+
+@mixin below-sm { @media (max-width: $bp-sm) { @content; } }
+@mixin below-md { @media (max-width: $bp-md) { @content; } }
+@mixin below-lg { @media (max-width: $bp-lg) { @content; } }
+
+@mixin flex-between {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@mixin grid($columns, $gap: 1rem) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat($columns, minmax(0, 1fr));
+}

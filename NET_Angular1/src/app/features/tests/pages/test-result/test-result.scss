@@ -1,0 +1,98 @@
+@use 'app/styles/layout/mixins' as *;
+
+.test-result-shell {
+    width: min(100%, 48rem);
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+
+    @include below-sm {
+        padding: 1rem 0.75rem;
+    }
+}
+
+.test-result-card {
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.5rem;
+
+    @include below-sm {
+        padding: 1.15rem;
+    }
+}
+
+.eyebrow {
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.test-result-card h1 {
+    margin: 0;
+}
+
+.result-status {
+    width: fit-content;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-weight: 800;
+}
+
+.result-status.passed {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.result-status.failed {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+
+    @include below-sm {
+        grid-template-columns: 1fr;
+    }
+}
+
+.score-item {
+    display: grid;
+    gap: 0.35rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) - 0.1rem);
+    padding: 1rem;
+}
+
+.score-label {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.875rem;
+}
+
+.score-item strong {
+    font-size: 1.5rem;
+}
+
+.empty-state {
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    @include below-sm {
+        flex-direction: column;
+
+        .primary-button, .secondary-button, button {
+            width: 100%;
+        }
+    }
+}

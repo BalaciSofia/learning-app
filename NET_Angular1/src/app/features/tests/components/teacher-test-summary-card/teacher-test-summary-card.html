@@ -1,0 +1,17 @@
+<a class="surface-card test-card" [routerLink]="detailRoute()">
+    <div class="test-card-header">
+        <h3 class="test-card-title">{{ test().title }}</h3>
+        <span class="meta-pill" [class.published-badge]="test().isPublished" [class.draft-badge]="!test().isPublished">
+            {{ test().isPublished ? 'Published' : 'Draft'}}
+        </span>
+        <span class="meta-pill question-count-pill">{{ test().questionCount }} questions</span>
+    </div>
+
+    @if (test().description) {
+        <p class="test-card-description">{{ test().description }}</p>
+    }
+
+    <div class="test-card-footer">
+        <span class="retake-hint">{{ test().isRetakeAllowed ? 'Retakes allowed' : 'Single attempt' }}</span>
+    </div>
+</a>

@@ -1,0 +1,116 @@
+<section class="question-review-shell">
+    @if (isLoading()) {
+        <app-loading-spinner
+            [isLoading]="true"
+            message="Loading question review...">
+        </app-loading-spinner>
+    } @else {
+        <article class="surface-card question-review-card">
+            @if (attempt(); as attemptData) {
+                <header class="question-review-header">
+                    <div>
+                        <p class="eyebrow">Question review</p>
+                        <h1>{{ attemptData.testTitle }}</h1>
+                        <p class="review-summary">
+                            Score: {{ attemptData.score }} / {{ attemptData.maxScore }}
+                        </p>
+                    </div>
+
+                    <div class="review-actions">
+                        <button
+                            class="secondary-button"
+                            type="button"
+                            (click)="goBackToAttempts()"
+                        >
+                            Previous attempts
+                        </button>
+
+                        <button
+                            class="primary-button"
+                            type="button"
+                            (click)="goBackToResult()"
+                        >
+                            Back to result
+                        </button>
+                    </div>
+                </header>
+
+                @if (questionReviews().length > 0) {
+                    <div class="questions-list">
+                        @for (question of questionReviews(); track question.questionId; let index = $index) {
+                            <section class="question-card">
+                                <div class="question-title-row">
+                                    <h2>
+                                        Question {{ index + 1 }}
+                                    </h2>
+
+                                    <span
+                                        class="question-status"
+                                        [class.correct]="question.isCorrect"
+                                        [class.incorrect]="!question.isCorrect"
+                                    >
+                                        @if (question.isCorrect) {
+                                            Correct
+                                        } @else {
+                                            Incorrect
+                                        }
+                                    </span>
+                                </div>
+
+                                <p class="question-text">
+                                    {{ question.questionText }}
+                                </p>
+
+                                <div class="answers-section">
+                                    <h3>Selected answer</h3>
+
+                                    <div class="selected-answers">
+                                        @for (answer of question.selectedAnswers; track answer.answerId) {
+                                            <div
+                                                class="answer-pill"
+                                                [class.correct-answer]="question.isCorrect && answer.isCorrect"
+                                                [class.selected-answer]="!question.isCorrect && answer.isCorrect"
+                                                [class.incorrect-answer]="!answer.isCorrect"
+                                            >
+                                                <span>{{ answer.answerText }}</span>
+
+                                                @if (!answer.isCorrect) {
+                                                    <strong>Incorrect selected answer</strong>
+                                                } @else if (question.isCorrect) {
+                                                    <strong>Correct selected answer</strong>
+                                                } @else {
+                                                    <strong>Selected correct option</strong>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (!question.isCorrect && question.correctAnswerText) {
+                                    <div class="correct-answer-box">
+                                        <h3>Correct answer</h3>
+                                        <p>{{ question.correctAnswerText }}</p>
+                                    </div>
+                                }
+
+                                <p class="points-awarded">
+                                    Points awarded: {{ question.pointsAwarded }}
+                                </p>
+                            </section>
+                        }
+                    </div>
+                } @else {
+                    <p class="empty-state">
+                        No answered questions available for this attempt.
+                    </p>
+                }
+            } @else {
+                <h1>Question review unavailable</h1>
+
+                <p class="empty-state">
+                    The question review could not be loaded.
+                </p>
+            }
+        </article>
+    }
+</section>

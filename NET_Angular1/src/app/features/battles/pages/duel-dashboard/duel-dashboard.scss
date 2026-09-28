@@ -1,0 +1,320 @@
+@use 'app/styles/layout/mixins' as *;
+
+.duel-dashboard-container {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  @include below-md {
+    padding: 1.5rem 1rem;
+  }
+
+  @include below-sm {
+    padding: 1rem 0.75rem;
+  }
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+
+  @include below-sm {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+
+    .btn-primary {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin: 0 0 0.25rem 0;
+  }
+
+  .subtitle {
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+.dashboard-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .badge {
+    background-color: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground));
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+  }
+}
+
+.empty-state {
+  background-color: hsl(var(--muted));
+  border: 1px dashed hsl(var(--border));
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+}
+
+.invitations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+
+  @include below-sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.invitation-card {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .challenger-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    .avatar-placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .challenger-name {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+    }
+
+    .challenge-label {
+      font-size: 0.8rem;
+      color: hsl(var(--muted-foreground));
+    }
+  }
+
+  .test-badge {
+    background-color: hsl(var(--muted));
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.75rem;
+  }
+
+  .time-stamp {
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .card-actions {
+    display: flex;
+    border-top: 1px solid hsl(var(--border));
+
+    .btn-accept {
+      flex: 1;
+      background-color: hsl(var(--success));
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      &:hover { background-color: hsl(142 71% 38%); }
+      &:disabled { opacity: 0.6; cursor: not-allowed; }
+    }
+
+    .btn-reject {
+      flex: 1;
+      background-color: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      border: none;
+      padding: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      &:hover { background-color: hsl(var(--border)); color: hsl(var(--foreground)); }
+      &:disabled { opacity: 0.6; cursor: not-allowed; }
+    }
+
+    .btn-play {
+      flex: 1;
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border: none;
+      padding: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      &:hover { background-color: hsl(87 44% 66%); }
+    }
+
+    .status-pill {
+      flex: 1;
+      padding: 0.75rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+
+      &.pending-pill {
+        background-color: hsl(var(--muted));
+        color: hsl(var(--muted-foreground));
+      }
+      &.waiting-pill {
+        background-color: hsl(var(--warning) / 0.15);
+        color: hsl(var(--warning));
+      }
+    }
+  }
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.history-card {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  @include below-sm {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .history-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .players-matchup {
+    font-weight: 600;
+    font-size: 1rem;
+    color: hsl(var(--foreground));
+
+    .versus {
+      color: hsl(var(--muted-foreground));
+      font-size: 0.85rem;
+      margin: 0 0.5rem;
+    }
+  }
+
+  .history-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: hsl(var(--muted-foreground));
+
+    .test-name { font-weight: 500; }
+  }
+
+  .history-outcome {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+
+    @include below-sm {
+      align-items: flex-start;
+    }
+  }
+
+  .outcome-pill {
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    &.outcome-winner {
+      background-color: hsl(var(--success) / 0.15);
+      color: hsl(142 71% 32%);
+    }
+
+    &.outcome-draw {
+      background-color: hsl(var(--warning) / 0.18);
+      color: hsl(38 80% 34%);
+    }
+  }
+
+  .date-stamp {
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+  }
+}
+
+.btn-primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: hsl(87 44% 66%);
+  }
+}
+
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.icon-inline {
+  font-size: 1.1em;
+  vertical-align: middle;
+}
+
+

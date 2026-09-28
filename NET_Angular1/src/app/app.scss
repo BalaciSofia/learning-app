@@ -1,0 +1,41 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+	display: block;
+	min-height: 100dvh;
+}
+
+.app-root {
+	min-height: 100dvh;
+}
+
+.app-content {
+	min-height: calc(100dvh - 6.3rem);
+	padding-top: 6.3rem;
+
+	@include below-md {
+		padding-top: 5rem;
+	}
+}
+
+.auth-content {
+	width: min(1120px, calc(100% - 2rem));
+	margin: 0 auto;
+	padding: 2rem 0 3rem;
+
+	@include below-md {
+		width: min(1120px, calc(100% - 1.25rem));
+		padding-top: 1.5rem;
+	}
+
+	@include below-sm {
+		padding: 1rem 0 2rem;
+	}
+}
+
+.material-symbols-rounded {
+	font-size: 1rem;
+	position: relative;
+	top: -0.05rem;
+}
+

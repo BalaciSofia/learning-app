@@ -1,0 +1,6 @@
+@for (n of notificationService.notifications(); track n.id) {
+    <div [class]="'toast ' + n.type">
+        {{ n.message }}
+        <button (click)="notificationService.dismiss(n.id)">×</button>
+    </div>
+}

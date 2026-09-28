@@ -1,0 +1,205 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+	display: block;
+}
+
+.app-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem 1.5rem;
+	border-bottom: 1px solid hsl(var(--border));
+	background: hsla(var(--card), 0.88);
+	backdrop-filter: blur(8px);
+
+	@include below-md {
+		padding: 0.75rem 1rem;
+	}
+}
+
+.brand-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.brand-mark {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 0.25rem;
+	width: 4.25rem;
+	height: 4.25rem;
+	padding: 0.4rem;
+	border-radius: 1.1rem;
+	background: hsl(var(--primary-soft));
+
+	@include below-sm {
+		width: 3.25rem;
+		height: 3.25rem;
+		padding: 0.3rem;
+		border-radius: 0.85rem;
+	}
+}
+
+.logo-tile {
+	display: grid;
+	place-items: center;
+	border-radius: 0.5rem;
+
+	.material-symbols-rounded {
+		font-size: 1.3rem;
+
+		@include below-sm {
+			font-size: 1rem;
+		}
+	}
+}
+
+.logo-tile-blue {
+	color: hsl(var(--primary-foreground));
+	background: hsl(var(--primary));
+}
+
+.logo-tile-orange {
+	color: hsl(var(--accent-foreground));
+	background: hsl(var(--accent));
+}
+
+.brand-title {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0;
+	font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+	font-weight: 900;
+	color: hsl(var(--accent));
+
+	@include below-sm {
+		display: none;
+	}
+}
+
+.brand-title-line {
+	font-size: 1.55rem;
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	-webkit-text-stroke: 0.025em currentColor;
+	text-align: left;
+	text-transform: uppercase;
+}
+
+.app-nav {
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+
+	@include below-md {
+		position: fixed;
+		top: 4rem;
+		left: 0;
+		right: 0;
+		flex-direction: column;
+		align-items: stretch;
+		padding: 1rem 1.5rem;
+		background: hsl(var(--card));
+		border-bottom: 1px solid hsl(var(--border));
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(-10px);
+		transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+
+		&.open {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+	}
+}
+
+.nav-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.45rem 0.8rem;
+	border-radius: 999px;
+	color: hsl(var(--muted-foreground));
+	font-weight: 600;
+	text-decoration: none;
+
+	@include below-md {
+		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
+		font-size: 1rem;
+	}
+}
+
+a.nav-item {
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+
+	&:hover {
+		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
+	}
+}
+
+span.nav-item {
+	cursor: default;
+	opacity: 0.55;
+}
+
+button.nav-item {
+	border: 0;
+	background: transparent;
+	font-family: inherit;
+	font-size: inherit;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+	text-align: left;
+
+	&:hover {
+		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
+	}
+}
+
+.header-actions {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.mobile-toggle {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 1px solid hsl(var(--border));
+	border-radius: 0.5rem;
+	background: transparent;
+	color: hsl(var(--foreground));
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+
+	&:hover {
+		background: hsl(var(--muted));
+	}
+
+	.material-symbols-rounded {
+		font-size: 1.35rem;
+	}
+
+	@include below-md {
+		display: flex;
+	}
+}
+

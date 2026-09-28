@@ -1,0 +1,167 @@
+<div class="duel-dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h2>Battle Arena</h2>
+      <p class="subtitle">Challenge your peers to test duels and climb the leaderboards!</p>
+    </div>
+    <button class="btn btn-primary" (click)="goToChallenge()">
+      + Challenge a Student
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-wrapper">
+      <app-loading-spinner />
+    </div>
+  } @else {
+    <!-- Incoming Invitations Section -->
+    <section class="dashboard-section">
+      <h3 class="section-title">
+        Incoming Invitations 
+        @if (invitations().length > 0) {
+          <span class="badge">{{ invitations().length }}</span>
+        }
+      </h3>
+
+      @if (invitations().length === 0) {
+        <div class="empty-state">
+          <p>No pending invitations at the moment.</p>
+        </div>
+      } @else {
+        <div class="invitations-grid">
+          @for (invitation of invitations(); track invitation.id) {
+            <div class="invitation-card">
+              <div class="card-body">
+                <div class="challenger-info">
+                  <span class="avatar-placeholder">{{ invitation.challengerName.charAt(0) }}</span>
+                  <div>
+                    <h4 class="challenger-name">{{ invitation.challengerName }}</h4>
+                    <span class="challenge-label">challenged you to a duel!</span>
+                  </div>
+                </div>
+                <div class="test-badge">
+                  {{ invitation.testTitle }}
+                </div>
+                <div class="time-stamp">
+                  Received: {{ invitation.createdAt | date:'short' }}
+                </div>
+              </div>
+              <div class="card-actions">
+                <button 
+                  class="btn btn-accept" 
+                  [disabled]="actionInProgress() === invitation.id"
+                  (click)="acceptInvitation(invitation)"
+                >
+                  Accept & Play
+                </button>
+                <button 
+                  class="btn btn-reject" 
+                  [disabled]="actionInProgress() === invitation.id"
+                  (click)="rejectInvitation(invitation.id)"
+                >
+                  Decline
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Active Duels Section -->
+    <section class="dashboard-section">
+      <h3 class="section-title">
+        Active Duels
+        @if (activeDuels().length > 0) {
+          <span class="badge">{{ activeDuels().length }}</span>
+        }
+      </h3>
+
+      @if (activeDuels().length === 0) {
+        <div class="empty-state">
+          <p>No active duels at the moment.</p>
+        </div>
+      } @else {
+        <div class="invitations-grid">
+          @for (duel of activeDuels(); track duel.id) {
+            <div class="invitation-card">
+              <div class="card-body">
+                <div class="challenger-info">
+                  <span class="avatar-placeholder">{{ getOpponentName(duel).charAt(0) || '?' }}</span>
+                  <div>
+                    <h4 class="challenger-name">vs {{ getOpponentName(duel) }}</h4>
+                    <span class="challenge-label">
+                      @if (duel.status === 'Pending') {
+                        Waiting for opponent to accept
+                      } @else {
+                        Accepted Battle
+                      }
+                    </span>
+                  </div>
+                </div>
+                <div class="test-badge">
+                  {{ duel.testTitle }}
+                </div>
+              </div>
+              <div class="card-actions">
+                @if (duel.status === 'Pending') {
+                  <span class="status-pill pending-pill">Pending</span>
+                } @else if (duel.status === 'Accepted') {
+                  @if (hasUserPlayed(duel)) {
+                    <span class="status-pill waiting-pill">Waiting for opponent to play</span>
+                  } @else {
+                    <button class="btn-play" (click)="playDuel(duel)">
+                      Play Now
+                    </button>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Duel History Section -->
+    <section class="dashboard-section">
+      <h3 class="section-title">Duel History</h3>
+
+      @if (history().length === 0) {
+        <div class="empty-state">
+          <p>No completed battles yet. Start a challenge to build your record!</p>
+        </div>
+      } @else {
+        <div class="history-list">
+          @for (item of history(); track item.duelId) {
+            <div class="history-card">
+              <div class="history-main">
+                <div class="players-matchup">
+                  <span class="player-name">{{ item.challengerName }}</span>
+                  <span class="versus">VS</span>
+                  <span class="player-name">{{ item.challengedName }}</span>
+                </div>
+                <div class="history-details">
+                  <span class="test-name">{{ item.testTitle }}</span>
+                  <span class="scores">
+                    Score: {{ item.challengerCorrectAnswers }} - {{ item.challengedCorrectAnswers }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="history-outcome">
+                @if (item.isDraw) {
+                  <span class="outcome-pill outcome-draw">Draw</span>
+                } @else {
+                  <span class="outcome-pill outcome-winner">
+                    {{ item.winnerName }} Won
+                  </span>
+                }
+                <span class="date-stamp">{{ item.completedAt | date:'shortDate' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>

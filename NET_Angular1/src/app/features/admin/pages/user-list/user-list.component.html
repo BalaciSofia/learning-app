@@ -1,0 +1,121 @@
+<section class="user-list-shell">
+  <header class="user-list-header">
+    <h1>User Management</h1>
+  </header>
+  <div class="tabs-bar">
+    <button type="button" class="tab-button" [class.active]="activeTab() === 'basic'" (click)="setTab('basic')">
+      Basic Users ({{ basicUsers().length }})
+    </button>
+
+    <button type="button" class="tab-button" [class.active]="activeTab() === 'all'" (click)="setTab('all')">
+      All Users ({{ allUsers().length }})
+    </button>
+  </div>
+
+  @if (isLoading()) {
+  <p class="loading-state">Loading users...</p>
+  } @else if (errorMessage()) {
+  <p class="error-state" role="alert">{{ errorMessage() }}</p>
+  } @else {
+
+  @if (activeTab() === 'basic') {
+  <div class="user-table-wrapper" [formGroup]="rolesForm">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of basicUsers(); track user.id) {
+        <tr>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <select class="role-select" [formControlName]="user.id.toString()">
+              <option value="" disabled>Select role</option>
+              <option [value]="UserRole.Teacher">Teacher</option>
+              <option [value]="UserRole.Student">Student</option>
+            </select>
+          </td>
+          <td>
+            <button class="primary-button save-button" [disabled]="savingIds().has(user.id)" (click)="onSave(user)">
+              @if (savingIds().has(user.id)) {
+              Saving...
+              } @else {
+              Save
+              }
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="4" class="empty-state">
+            No basic users to manage.
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  @if (activeTab() === 'all') {
+  <div class="user-table-wrapper">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of allUsers(); track user.id) {
+        <tr>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="role-badge" [attr.data-role]="getRoleName(user.role).toLowerCase()">
+              {{ getRoleName(user.role) }}
+            </span>
+          </td>
+          <td>
+            <button class="danger-button delete-button" type="button" [disabled]="deletingIds().has(user.id)"
+              (click)="onDelete(user)" title="Delete user">
+              @if (deletingIds().has(user.id)) {
+              Deleting...
+              } @else {
+              Delete Account
+              }
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="4" class="empty-state">
+            No users found.
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  }
+
+  @if (pendingRoleChange()) {
+  <app-confirm-dialog title="Change role?" [message]="confirmMessage()" confirmLabel="Change role"
+    (confirmed)="confirmRoleChange()" (cancelled)="cancelRoleChange()" />
+  }
+
+  @if (pendingUserDelete()) {
+  <app-confirm-dialog title="Delete user?" [message]="deleteConfirmMessage()" confirmLabel="Delete account"
+    (confirmed)="confirmUserDelete()" (cancelled)="cancelUserDelete()" />
+  }
+</section>

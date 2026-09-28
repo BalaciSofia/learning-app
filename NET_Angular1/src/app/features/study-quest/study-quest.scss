@@ -1,0 +1,239 @@
+@use 'app/styles/layout/mixins' as *;
+
+:host {
+    display: block;
+}
+
+.sq-shell {
+    padding: 2rem;
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    @include below-sm {
+        padding: 1rem;
+        gap: 1rem;
+    }
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.15s ease;
+
+    .material-symbols-rounded { font-size: 1.1rem; }
+
+    &:hover { color: hsl(var(--foreground)); }
+}
+
+.sq-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.5rem;
+
+    @include below-sm {
+        padding: 1.15rem;
+    }
+}
+
+// ── Profile header ─────────────────────────────────────────────
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+
+    @include below-sm {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+}
+
+.avatar {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+}
+
+.profile-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    @include below-sm {
+        justify-content: center;
+    }
+
+    .meta-pill {
+        color: hsl(var(--primary-foreground));
+    }
+}
+
+.xp-pill {
+    background: hsl(var(--primary) / 0.12);
+}
+
+// ── Stats ──────────────────────────────────────────────────────
+.section-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: hsl(var(--muted-foreground));
+    margin: 0 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: calc(var(--radius) - 0.15rem);
+    background: hsl(var(--muted) / 0.4);
+    text-align: center;
+
+    @include below-sm {
+        flex: 1 1 40%;
+        padding: 0.6rem 0.85rem;
+    }
+}
+
+.stat-icon {
+    font-size: 1.6rem;
+
+    &.streak  { color: hsl(var(--accent)); }
+    &.questions { color: hsl(var(--primary)); }
+    &.correct { color: hsl(142 71% 45%); }
+    &.battles { color: hsl(350 80% 55%); }
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+}
+
+// ── Daily Puzzle ───────────────────────────────────────────────
+.puzzle-question {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.puzzle-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.puzzle-option {
+    background: hsl(var(--muted) / 0.4);
+    border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) - 0.15rem);
+    padding: 0.6rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+
+    &:hover:not(:disabled) {
+        background: hsl(var(--primary) / 0.12);
+        border-color: hsl(var(--primary) / 0.4);
+    }
+
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.puzzle-result {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    padding: 0.6rem 0.75rem;
+    border-radius: calc(var(--radius) - 0.15rem);
+    background: hsl(var(--muted) / 0.3);
+
+    .material-symbols-rounded { font-size: 1.3rem; }
+
+    &.correct, &.claimed {
+        color: hsl(142 71% 40%);
+        background: hsl(142 71% 40% / 0.1);
+    }
+
+    &.incorrect {
+        color: hsl(350 80% 50%);
+        background: hsl(350 80% 50% / 0.1);
+    }
+}
+
+// ── Medals ─────────────────────────────────────────────────────
+.medals-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.medal-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: hsl(45 100% 60% / 0.15);
+    color: hsl(45 90% 40%);
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid hsl(45 90% 60% / 0.4);
+}
+
+// ── Action buttons ─────────────────────────────────────────────
+.sq-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    @include below-sm {
+        flex-direction: column;
+
+        .primary-button, .secondary-button, button {
+            width: 100%;
+        }
+    }
+}
+

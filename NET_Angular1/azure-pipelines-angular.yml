@@ -1,0 +1,47 @@
+# Angular frontend build and publish pipeline
+trigger:
+  branches:
+    include:
+      - main
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  artifactDir: '$(Build.ArtifactStagingDirectory)'
+
+steps:
+- task: UseNode@1
+  displayName: 'Use Node 22'
+  inputs:
+    version: '22.x'
+
+- script: npm ci --legacy-peer-deps
+  displayName: 'Install dependencies'
+
+- script: npm run build
+  displayName: 'Build Angular app'
+
+- task: CopyFiles@2
+  displayName: 'Stage static files'
+  inputs:
+    SourceFolder: 'dist/learning-app/browser'
+    Contents: '**'
+    TargetFolder: '$(artifactDir)/app'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive artifact'
+  inputs:
+    rootFolderOrFile: '$(artifactDir)/app'
+    includeRootFolder: false
+    archiveType: zip
+    archiveFile: '$(artifactDir)/exam-app.zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Angular artifact'
+  inputs:
+    PathtoPublish: '$(artifactDir)/exam-app.zip'
+    ArtifactName: 'exam-app'
+    publishLocation: Container

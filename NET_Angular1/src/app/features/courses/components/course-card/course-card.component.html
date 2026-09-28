@@ -1,0 +1,32 @@
+<article class="surface-card course-card">
+  <div class="course-card-header">
+    <a
+      class="course-card-link"
+      [routerLink]="['/courses', 'details', course().id]"
+    >
+      <h3 class="course-card-title">
+        {{ course().title }}
+      </h3>
+    </a>
+    @if (!course().isPublished) {
+      <span class="badge draft-badge">Draft</span>
+    }
+  </div>
+
+  <p class="course-card-description">
+    {{ course().description }}
+  </p>
+
+  @if (isEnrolled()) {
+    <div *appHasRole="UserRole.Student" class="course-card-actions">
+      <a
+        class="action-link"
+        [routerLink]="['/', routePaths.studyQuest]"
+        [queryParams]="{ courseId: course().id }"
+      >
+        <span class="material-symbols-rounded">auto_stories</span>
+        Study Quest
+      </a>
+    </div>
+  }
+</article>
