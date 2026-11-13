@@ -74,6 +74,12 @@ cd <parent-folder>\AngularApp
 
 ## 3. Build and start all app containers
 
+Create your local `.env` file from the template and fill in the SQL Server `sa` password and a password for the HTTPS certificate (see 4.1):
+
+```powershell
+Copy-Item .env.example .env
+```
+
 From AngularApp root, build and run:
 
 ```powershell
@@ -92,20 +98,16 @@ Open:
 
 - http://localhost:3000
 
-## 4.1 Fix HTTPS certificate on a new Windows machine
+## 4.1 HTTPS certificate for quiz-module
 
-The `quiz-module` service is exposed on `https://localhost:7290` using the bundled certificate in `AngularApp/certs/quizmodule.pfx`.
-On a fresh machine, browsers do not trust it by default, which causes:
+The `quiz-module` service is exposed on `https://localhost:7290` and needs a local development certificate.
+The certificate is **not** committed to the repository: each developer generates their own.
 
-- `net::ERR_CERT_AUTHORITY_INVALID`
-
-### Trust the certificate (Current User)
-
-Run these commands from `AngularApp` root in PowerShell:
+Run these commands from the `AngularApp` root in PowerShell (use the same password you put in `.env` as `QUIZ_CERT_PASSWORD`):
 
 ```powershell
-$password = ConvertTo-SecureString "REMOVED" -AsPlainText -Force
-Import-PfxCertificate -FilePath ".\certs\quizmodule.pfx" -Password $password -CertStoreLocation "Cert:\CurrentUser\Root"
+dotnet dev-certs https -ep .\certs\quizmodule.pfx -p "<QUIZ_CERT_PASSWORD>"
+dotnet dev-certs https --trust
 ```
 
 Then restart the browser and verify:
@@ -113,13 +115,6 @@ Then restart the browser and verify:
 - https://localhost:7290
 
 If the certificate warning no longer appears there, Angular calls to `/api/quiz` and `/api/topic/user` should succeed.
-
-### Optional: trust for all users (Admin PowerShell)
-
-```powershell
-$password = ConvertTo-SecureString "REMOVED" -AsPlainText -Force
-Import-PfxCertificate -FilePath ".\certs\quizmodule.pfx" -Password $password -CertStoreLocation "Cert:\LocalMachine\Root"
-```
 
 ## 5. Stop containers
 
@@ -164,6 +159,7 @@ docker compose down -v
 ## Quick start checklist
 
 1. Start SQL Server first from QuizModule/Docker/SQL Server.
-2. Start AngularApp stack from AngularApp root.
-3. Open http://localhost:3000.
-4. Confirm three app containers + sqlserver are healthy.
+2. Create `.env` from `.env.example` and generate the HTTPS certificate (4.1).
+3. Start AngularApp stack from AngularApp root.
+4. Open http://localhost:3000.
+5. Confirm three app containers + sqlserver are healthy.

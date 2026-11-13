@@ -44,3 +44,7 @@ Thumbs.db
 
 # Playwright
 /test-results/
+
+# Secrets and local certificates
+.env
+*.pfx
